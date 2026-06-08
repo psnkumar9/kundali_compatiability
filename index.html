@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#6a1b9a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kundali Milan">
+<meta name="description" content="Vedic Kundali Compatibility — Ashtakoot Milan">
+<link rel="manifest" href="/manifest.json">
+<title>Kundali Milan — Vedic Compatibility</title>
+<style>
+:root {
+  --primary: #6a1b9a;
+  --primary-light: #9c4dcc;
+  --primary-dark: #4a0072;
+  --accent: #ff6f00;
+  --bg: #faf5ff;
+  --card: #ffffff;
+  --text: #1a0033;
+  --muted: #6b5b7b;
+  --border: #e0d0f0;
+  --good: #1b5e20;
+  --good-bg: #e8f5e9;
+  --warn: #e65100;
+  --warn-bg: #fff3e0;
+  --bad: #b71c1c;
+  --bad-bg: #ffebee;
+  --info: #0d47a1;
+  --info-bg: #e3f2fd;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(106,27,154,0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+}
+
+/* ── Header ── */
+header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+  color: white;
+  padding: 16px 20px 20px;
+  text-align: center;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: 0.5px; }
+header p  { font-size: 0.75rem; opacity: 0.85; margin-top: 3px; }
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  background: var(--primary-dark);
+  border-bottom: 2px solid var(--accent);
+}
+.tab-btn {
+  flex: 1; padding: 10px 4px;
+  background: none; border: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; text-transform: uppercase;
+  letter-spacing: 0.5px; transition: all 0.2s;
+}
+.tab-btn.active {
+  color: white;
+  border-bottom: 3px solid var(--accent);
+  background: rgba(255,255,255,0.08);
+}
+
+/* ── Main ── */
+main { padding: 16px; padding-bottom: 52px; max-width: 680px; margin: 0 auto; }
+
+/* ── Cards ── */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+}
+.card-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.person-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white; font-size: 0.7rem; font-weight: 800;
+}
+
+/* ── Form ── */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.form-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+.form-row.single { grid-template-columns: 1fr; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+label { font-size: 0.72rem; color: var(--muted); font-weight: 600; }
+input, select {
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: white;
+  width: 100%;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(106,27,154,0.1);
+}
+input[type="date"], input[type="time"] { cursor: pointer; }
+
+/* ── City Search ── */
+.city-wrap { position: relative; }
+.city-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: white;
+  border: 1.5px solid var(--primary);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  max-height: 200px; overflow-y: auto;
+  z-index: 200; display: none;
+}
+.city-dropdown.open { display: block; }
+.city-option {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #f0e6ff;
+}
+.city-option:last-child { border-bottom: none; }
+.city-option:hover { background: #f3e5ff; }
+.city-option .city-name { font-weight: 600; }
+.city-option .city-sub  { font-size: 0.72rem; color: var(--muted); }
+
+/* ── Method selector ── */
+.method-row {
+  display: flex; gap: 8px;
+  margin-bottom: 14px;
+}
+.method-btn {
+  flex: 1; padding: 9px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: white; cursor: pointer;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--muted); transition: all 0.2s;
+}
+.method-btn.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+}
+
+/* ── Submit ── */
+.submit-btn {
+  width: 100%; padding: 15px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white; border: none; border-radius: 10px;
+  font-size: 1rem; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(106,27,154,0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.submit-btn:active { transform: scale(0.98); box-shadow: none; }
+.submit-btn:disabled { opacity: 0.6; cursor: wait; }
+
+/* ── Loading ── */
+.loading {
+  display: none; text-align: center; padding: 30px;
+}
+.spinner {
+  width: 44px; height: 44px;
+  border: 4px solid #e0d0f0;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Score Hero ── */
+.score-hero {
+  text-align: center;
+  padding: 20px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  position: relative; overflow: hidden;
+}
+.score-ring-wrap {
+  position: relative; width: 130px; height: 130px;
+  margin: 0 auto 12px;
+}
+.score-ring-wrap svg { transform: rotate(-90deg); }
+.score-text {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.score-num {
+  font-size: 2rem; font-weight: 800;
+  line-height: 1;
+}
+.score-denom { font-size: 0.85rem; color: var(--muted); }
+.score-label {
+  font-size: 1.2rem; font-weight: 800;
+  letter-spacing: 0.5px;
+}
+.score-desc { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+/* ── Person Summary ── */
+.person-summary {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 14px;
+}
+.person-card {
+  background: linear-gradient(135deg, #f3e5ff, #ede0f8);
+  border-radius: 10px; padding: 12px;
+  border: 1px solid #d0a8f0;
+}
+.person-card h4 {
+  font-size: 0.75rem; font-weight: 700;
+  color: var(--primary-dark); margin-bottom: 6px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.person-card .nak  { font-size: 0.95rem; font-weight: 700; color: var(--primary-dark); }
+.person-card .pada { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+.person-card .rash { font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-top: 3px; }
+.manglik-tag {
+  display: inline-block;
+  background: #ffcdd2; color: #c62828;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px;
+  margin-top: 4px;
+}
+.manglik-tag.cancelled {
+  background: #c8e6c9; color: #2e7d32;
+}
+
+/* ── Koots Table ── */
+.koot-row {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.koot-row:last-child { border-bottom: none; }
+.koot-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.koot-name { font-size: 0.85rem; font-weight: 600; }
+.koot-score {
+  font-size: 0.85rem; font-weight: 700;
+  min-width: 60px; text-align: right;
+}
+.koot-score.good  { color: var(--good); }
+.koot-score.medium{ color: #f57f17; }
+.koot-score.poor  { color: var(--bad); }
+.progress-bar {
+  height: 8px; background: #f0e6ff;
+  border-radius: 4px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; border-radius: 4px;
+  transition: width 0.6s ease;
+}
+.progress-fill.good   { background: linear-gradient(90deg, #43a047, #66bb6a); }
+.progress-fill.medium { background: linear-gradient(90deg, #fb8c00, #ffa726); }
+.progress-fill.poor   { background: linear-gradient(90deg, #e53935, #ef5350); }
+.koot-detail {
+  font-size: 0.72rem; color: var(--muted);
+  margin-top: 6px; display: none;
+  line-height: 1.5;
+  background: #fdf8ff; border-radius: 6px;
+  padding: 8px; border-left: 3px solid var(--primary-light);
+}
+.koot-row.expanded .koot-detail { display: block; }
+.expand-icon {
+  font-size: 0.7rem; color: var(--muted);
+  cursor: pointer; padding: 2px 6px;
+  border: 1px solid var(--border); border-radius: 4px;
+  user-select: none;
+}
+
+/* ── Extra Checks ── */
+.extra-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.extra-item {
+  border-radius: 8px; padding: 10px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.extra-item.pass { background: var(--good-bg); border: 1px solid #a5d6a7; }
+.extra-item.fail { background: var(--bad-bg);  border: 1px solid #ef9a9a; }
+.extra-name { font-size: 0.75rem; font-weight: 700; }
+.extra-name.pass { color: var(--good); }
+.extra-name.fail { color: var(--bad); }
+.extra-badge {
+  display: inline-block;
+  font-size: 0.62rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 3px;
+  width: fit-content;
+}
+.extra-badge.CRITICAL { background: #ffcdd2; color: #b71c1c; }
+.extra-badge.HIGH     { background: #ffe0b2; color: #e65100; }
+.extra-badge.MEDIUM   { background: #fff9c4; color: #f57f17; }
+.extra-status { font-size: 1rem; }
+.extra-meaning { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+/* ── Scriptural Notes ── */
+.note {
+  border-radius: 8px; padding: 12px;
+  margin-bottom: 8px;
+  display: flex; gap: 10px;
+}
+.note.good     { background: var(--good-bg);  border: 1px solid #a5d6a7; }
+.note.info     { background: var(--info-bg);  border: 1px solid #90caf9; }
+.note.warning  { background: var(--warn-bg);  border: 1px solid #ffcc80; }
+.note.critical { background: var(--bad-bg);   border: 1px solid #ef9a9a; }
+.note-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+.note-body h4 { font-size: 0.8rem; font-weight: 700; margin-bottom: 3px; }
+.note.good     h4 { color: var(--good); }
+.note.info     h4 { color: var(--info); }
+.note.warning  h4 { color: var(--warn); }
+.note.critical h4 { color: var(--bad);  }
+.note-body p { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+/* ── Section heading ── */
+.section-h {
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--primary); text-transform: uppercase;
+  letter-spacing: 0.8px; margin-bottom: 10px;
+}
+
+/* ── Error ── */
+.error-box {
+  background: var(--bad-bg); border: 1px solid #ef9a9a;
+  border-radius: 10px; padding: 16px;
+  color: var(--bad); font-size: 0.85rem;
+  display: none;
+}
+
+/* ── Utility ── */
+.hidden { display: none !important; }
+.divider {
+  border: none; border-top: 1px solid var(--border);
+  margin: 4px 0;
+}
+
+/* ── Score Total row ── */
+.score-total-row {
+  display: flex; justify-content: space-between;
+  align-items: center;
+  padding: 10px 0 4px;
+  font-weight: 700;
+}
+.score-total-row .total-label { font-size: 0.9rem; color: var(--primary-dark); }
+.score-total-row .total-value { font-size: 1.1rem; }
+
+/* ── History Dropdown ── */
+.history-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: white;
+  border: 1.5px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  max-height: 220px; overflow-y: auto;
+  z-index: 200; display: none;
+}
+.history-dropdown.open { display: block; }
+.history-option {
+  padding: 10px 12px; cursor: pointer;
+  font-size: 0.83rem; border-bottom: 1px solid #f0e6ff;
+}
+.history-option:last-child { border-bottom: none; }
+.history-option:hover { background: #fff3e0; }
+.history-option .h-name { font-weight: 700; color: var(--primary-dark); }
+.history-option .h-sub  { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
+
+/* ── Save/PDF buttons ── */
+.action-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.action-row .submit-btn { font-size: 0.85rem; padding: 12px 8px; }
+.save-status { font-size: 0.75rem; color: var(--muted); min-height: 18px; text-align:center; }
+
+/* ── File input ── */
+input[type="file"] {
+  padding: 8px 10px; font-size: 0.82rem;
+  border: 1.5px dashed var(--border);
+  border-radius: 8px; background: var(--bg);
+  cursor: pointer; width: 100%;
+}
+
+/* ── Sticky PDF bar on Results tab ── */
+#pdf-bar {
+  position: sticky; bottom: 42px; z-index: 90;
+  background: linear-gradient(135deg, #1b5e20, #43a047);
+  color: white; border: none; border-radius: 10px;
+  padding: 14px; width: 100%; font-size: 1rem;
+  font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
+  box-shadow: 0 4px 16px rgba(27,94,32,0.45);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: opacity 0.2s;
+}
+#pdf-bar:disabled { opacity: 0.5; cursor: wait; }
+
+/* ── Workings tab ── */
+.work-section { margin-bottom: 18px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.work-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+  color: white; cursor: pointer; user-select: none;
+}
+.work-title { font-weight: 700; font-size: 0.88rem; }
+.work-badge { font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; font-weight: 700; }
+.work-badge.PASS { background: #e8f5e9; color: #1b5e20; }
+.work-badge.FAIL { background: #ffebee; color: #b71c1c; }
+.work-badge.score { background: rgba(255,255,255,0.25); color: white; }
+.work-badge.CRITICAL { background: #b71c1c; color: white; }
+.work-body { padding: 12px 14px; background: #fff; }
+.work-values { font-size: 0.78rem; color: var(--primary); font-weight: 600; margin-bottom: 8px; }
+.work-steps { list-style: none; margin: 0 0 8px; padding: 0; }
+.work-steps li {
+  font-size: 0.78rem; color: var(--text); padding: 4px 0 4px 20px;
+  border-bottom: 1px dashed var(--border); position: relative; line-height: 1.45;
+}
+.work-steps li:before { content: '▸'; position: absolute; left: 4px; color: var(--primary-light); }
+.work-steps li:last-child { border-bottom: none; }
+.work-inference {
+  font-size: 0.82rem; font-weight: 700; color: var(--primary-dark);
+  background: var(--bg); padding: 6px 10px; border-radius: 6px; margin-top: 6px;
+}
+.work-importance { font-size: 0.7rem; color: var(--muted); margin-top: 4px; }
+.work-meaning { font-size: 0.75rem; color: var(--muted); font-style: italic; margin-top: 4px; line-height: 1.4; }
+
+/* ── History tab ── */
+.hist-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.hist-row:last-child { border-bottom: none; }
+.hist-info { flex: 1; min-width: 0; }
+.hist-names { font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); }
+.hist-sub   { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.hist-date  { font-size: 0.68rem; color: var(--muted); margin-top: 1px; }
+.hist-btn {
+  flex-shrink: 0; font-size: 0.72rem; padding: 6px 12px;
+  border-radius: 6px; cursor: pointer; font-weight: 600;
+  border: 1.5px solid; background: white;
+}
+.hist-btn.recall { border-color: var(--primary); color: var(--primary); }
+.hist-btn.pdf    { border-color: var(--accent);  color: var(--accent);  }
+
+/* ── About tab ── */
+.about-section { margin-bottom: 18px; }
+.about-section h3 {
+  font-size: 0.9rem; font-weight: 700;
+  color: var(--primary); margin-bottom: 6px;
+}
+.about-section p {
+  font-size: 0.78rem; color: var(--muted); line-height: 1.6;
+}
+.about-section ul {
+  margin: 6px 0 0 16px;
+  font-size: 0.78rem; color: var(--muted); line-height: 1.8;
+}
+
+@media (min-width: 480px) {
+  .form-row { gap: 14px; }
+  main { padding: 20px; }
+}
+
+/* ── Mobile tweaks ── */
+@media (max-width: 480px) {
+  /* Tab bar: shrink text so all 5 fit on narrow screens */
+  .tab-btn { font-size: 0.65rem; padding: 10px 2px; }
+
+  /* Footer: hide the long disclaimer text, just show contact */
+  #footer-disclaimer { display: none; }
+
+  /* History: wrap buttons below the info row on tiny screens */
+  .hist-row { flex-wrap: wrap; }
+  .hist-btn { flex: 1 1 40%; font-size: 0.7rem; padding: 7px 6px; text-align: center; }
+
+  /* Person summary: stack vertically on very small screens */
+  .person-summary { grid-template-columns: 1fr; }
+
+  /* Extra checks grid: single column on narrow screens */
+  .extra-grid { grid-template-columns: 1fr; }
+
+  /* Score ring: slightly smaller so it doesn't overflow */
+  .score-ring-wrap { width: 110px; height: 110px; }
+  .score-ring-wrap svg { width: 110px; height: 110px; }
+  .score-num { font-size: 1.7rem; }
+
+  /* Ensure dropdowns don't go off-screen */
+  .city-dropdown, .history-dropdown { max-height: 160px; }
+}
+
+@media (max-width: 360px) {
+  /* Ultra-narrow: emoji only in tabs */
+  .tab-btn { font-size: 0.6rem; letter-spacing: 0; }
+  header h1 { font-size: 1.1rem; }
+}
+</style>
+  <script src="compatibility_logic.js"></script>
+</head>
+<body>
+
+<header>
+  <h1>🪐 <span data-i18n="app_title">Kundali Milan</span></h1>
+  <p data-i18n="header_sub">Vedic Ashtakoot Compatibility — Powered by PyJHora</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('form')" data-i18n-tab="tab_enter">✍️ Enter</button>
+  <button class="tab-btn" onclick="switchTab('results')" id="results-tab-btn" style="opacity:0.5" data-i18n-tab="tab_results">📊 Results</button>
+  <button class="tab-btn" onclick="switchTab('workings')" id="workings-tab-btn" style="opacity:0.5" data-i18n-tab="tab_workings">🔍 Workings</button>
+  <button class="tab-btn" onclick="switchTab('history')" data-i18n-tab="tab_history">🕐 History</button>
+  <button class="tab-btn" onclick="switchTab('about')" data-i18n-tab="tab_about">📖 About</button>
+</div>
+
+<main id="tab-form">
+
+  <!-- Guru Blessings Display -->
+  <div id="guru-banner" style="display:none; background:linear-gradient(135deg,#4a0072,#6a1b9a);
+       border-radius:var(--radius); padding:12px 16px; margin-bottom:14px; text-align:center;">
+    <div style="font-size:0.7rem; color:rgba(255,255,255,0.7); letter-spacing:1px;
+                text-transform:uppercase; margin-bottom:8px;">✦ Jai Gurudev ✦</div>
+    <div id="guru-display" style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;"></div>
+  </div>
+
+  <!-- Language Selector -->
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-title">🌐 <span data-i18n="language">Language</span> / भाषा / மொழி</div>
+    <select id="lang_select" onchange="setLanguage(this.value)" style="padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;color:var(--text);background:white;width:100%">
+      <option value="en">English</option>
+      <option value="hi">हिन्दी (Hindi)</option>
+      <option value="ta">தமிழ் (Tamil)</option>
+      <option value="te">తెలుగు (Telugu)</option>
+      <option value="kn">ಕನ್ನಡ (Kannada)</option>
+      <option value="ml">മലയാളം (Malayalam)</option>
+    </select>
+  </div>
+
+  <!-- Method -->
+  <div class="card">
+    <div class="card-title" data-i18n="matching_system">Matching System</div>
+    <div class="method-row">
+      <button class="method-btn active" id="btn-north" onclick="setMethod('North')"><span data-i18n="north_india_btn">North India</span><br><small>Ashtakoota (36)</small></button>
+      <button class="method-btn" id="btn-south" onclick="setMethod('South')"><span data-i18n="south_india_btn">South India</span><br><small>Dashakoot (10)</small></button>
+    </div>
+  </div>
+
+  <!-- Person 1 -->
+  <div class="card">
+    <div class="card-title"><span class="person-badge">1</span> <span data-i18n="person1_label">Person 1 (Groom / Boy)</span></div>
+    <div class="form-row single">
+      <div class="field city-wrap">
+        <label data-i18n="load_from_history">🕐 Load from history</label>
+        <input type="text" id="p1_history_input" placeholder="Search saved persons…" autocomplete="off"
+               oninput="searchHistory('p1')" onfocus="searchHistory('p1')">
+        <div class="history-dropdown" id="p1_history_dropdown"></div>
+      </div>
+    </div>
+    <div class="form-row single">
+      <div class="field">
+        <label data-i18n="full_name">Full Name</label>
+        <input type="text" id="p1_name" placeholder="e.g. Rama Sharma" value="">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label data-i18n="date_of_birth">Date of Birth</label>
+        <input type="date" id="p1_date" value="1990-01-01">
+      </div>
+      <div class="field">
+        <label data-i18n="time_of_birth">Time of Birth</label>
+        <input type="time" id="p1_time" value="06:00">
+      </div>
+    </div>
+    <div class="form-row single">
+      <div class="field city-wrap">
+        <label data-i18n="birth_place">Birth Place</label>
+        <input type="text" id="p1_city_input" placeholder="Type city name…" autocomplete="off"
+               oninput="searchCity('p1')" onfocus="searchCity('p1')">
+        <div class="city-dropdown" id="p1_city_dropdown"></div>
+        <input type="hidden" id="p1_lat" value="17.3850">
+        <input type="hidden" id="p1_lon" value="78.4867">
+        <input type="hidden" id="p1_tz"  value="5.5">
+        <input type="hidden" id="p1_place" value="Hyderabad,IN">
+      </div>
+    </div>
+  </div>
+
+  <!-- Person 2 -->
+  <div class="card">
+    <div class="card-title"><span class="person-badge" style="background:#ff6f00">2</span> <span data-i18n="person2_label">Person 2 (Bride / Girl)</span></div>
+    <div class="form-row single">
+      <div class="field city-wrap">
+        <label data-i18n="load_from_history">🕐 Load from history</label>
+        <input type="text" id="p2_history_input" placeholder="Search saved persons…" autocomplete="off"
+               oninput="searchHistory('p2')" onfocus="searchHistory('p2')">
+        <div class="history-dropdown" id="p2_history_dropdown"></div>
+      </div>
+    </div>
+    <div class="form-row single">
+      <div class="field">
+        <label data-i18n="full_name">Full Name</label>
+        <input type="text" id="p2_name" placeholder="e.g. Sita Devi" value="">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label data-i18n="date_of_birth">Date of Birth</label>
+        <input type="date" id="p2_date" value="1993-06-15">
+      </div>
+      <div class="field">
+        <label data-i18n="time_of_birth">Time of Birth</label>
+        <input type="time" id="p2_time" value="10:30">
+      </div>
+    </div>
+    <div class="form-row single">
+      <div class="field city-wrap">
+        <label data-i18n="birth_place">Birth Place</label>
+        <input type="text" id="p2_city_input" placeholder="Type city name…" autocomplete="off"
+               oninput="searchCity('p2')" onfocus="searchCity('p2')">
+        <div class="city-dropdown" id="p2_city_dropdown"></div>
+        <input type="hidden" id="p2_lat" value="13.0827">
+        <input type="hidden" id="p2_lon" value="80.2707">
+        <input type="hidden" id="p2_tz"  value="5.5">
+        <input type="hidden" id="p2_place" value="Chennai,IN">
+      </div>
+    </div>
+  </div>
+
+  <div class="error-box" id="error-box"></div>
+
+  <button class="submit-btn" id="calc-btn" onclick="calculate()">
+    🔮 <span data-i18n="calculate">Calculate Compatibility</span>
+  </button>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p style="color:var(--muted); font-size:0.85rem" data-i18n="computing">Computing Kundali Milan…</p>
+  </div>
+
+</main>
+
+<!-- Results Tab -->
+<main id="tab-results" class="hidden">
+
+  <!-- Score Hero -->
+  <div class="score-hero card" id="score-hero"></div>
+
+  <!-- Person Summaries -->
+  <div class="person-summary" id="person-summary"></div>
+
+  <!-- Ashtakoota Table -->
+  <div class="card">
+    <div class="card-title">🔢 Ashtakoota Scores</div>
+    <div id="koots-table"></div>
+    <hr class="divider" style="margin:8px 0">
+    <div class="score-total-row" id="total-row"></div>
+  </div>
+
+  <!-- Extra Checks -->
+  <div class="card">
+    <div class="card-title">✅ Additional Poruthams</div>
+    <div class="extra-grid" id="extra-grid"></div>
+  </div>
+
+  <!-- Manglik -->
+  <div class="card" id="manglik-card"></div>
+
+  <!-- Scriptural Notes -->
+  <div class="card" id="notes-card"></div>
+
+  <button class="submit-btn" style="background:linear-gradient(135deg,#4a0072,#9c4dcc); margin-bottom:8px"
+          onclick="switchTab('form')">← <span data-i18n="recalculate">Recalculate</span></button>
+
+  <!-- Sticky PDF download bar -->
+  <button id="pdf-bar" onclick="saveAndDownload()" disabled>
+    📥 <span data-i18n="download_pdf">Download PDF Report</span>
+  </button>
+  <div class="save-status" id="save-status" style="text-align:center;margin-bottom:8px"></div>
+
+</main>
+
+<!-- About Tab -->
+<main id="tab-about" class="hidden">
+
+  <div class="card">
+    <div class="about-section">
+      <h3>What is Kundali Milan?</h3>
+      <p>Kundali Milan (Guna Milan) is the traditional Vedic method of assessing compatibility between two persons for marriage or other partnerships. It is based on the Moon's Nakshatra (birth star) and Pada (quarter) at the time of birth.</p>
+    </div>
+
+    <div class="about-section">
+      <h3>Ashtakoota System (North India)</h3>
+      <p>Eight factors (Koots) are evaluated, with a maximum of 36 points:</p>
+      <ul>
+        <li><b>Varna</b> (1) — Spiritual compatibility</li>
+        <li><b>Vashya</b> (2) — Mutual attraction and control</li>
+        <li><b>Tara / Dina</b> (3) — Birth star compatibility</li>
+        <li><b>Yoni</b> (4) — Nature, temperament, progeny</li>
+        <li><b>Graha Maitri</b> (5) — Planetary friendship (Moon lords)</li>
+        <li><b>Gana</b> (6) — Temperament (Deva / Manushya / Rakshasa)</li>
+        <li><b>Bhakoot</b> (7) — Moon sign relationship</li>
+        <li><b>Nadi</b> (8) — Health and progeny (most critical)</li>
+      </ul>
+    </div>
+
+    <div class="about-section">
+      <h3>Score Interpretation</h3>
+      <ul>
+        <li>0–17: Not recommended</li>
+        <li>18–23: Average — proceed with remedies</li>
+        <li>24–27: Good — proceed confidently</li>
+        <li>28–31: Very Good — auspicious match</li>
+        <li>32–36: Excellent — highly auspicious</li>
+      </ul>
+    </div>
+
+    <div class="about-section">
+      <h3>South India (Dashakoot)</h3>
+      <p>Tamil / South Indian tradition uses 10 Poruthams (Dina, Gana, Mahendra, Sthree Dheerga, Yoni, Rashi, Raashi Adhipathi, Vasya, Rajju, Vedha). Rajju is considered the most critical and is checked first per Jataka Parijata.</p>
+    </div>
+
+    <div class="about-section">
+      <h3>Three Major Doshas</h3>
+      <ul>
+        <li><b>Nadi Dosha</b> — Same Nadi (most severe per BPHS)</li>
+        <li><b>Bhakoot Dosha</b> — Incompatible Moon sign pairs</li>
+        <li><b>Gana Dosha</b> — Incompatible temperament types</li>
+      </ul>
+    </div>
+
+    <div class="about-section">
+      <h3>Manglik (Kuja) Dosha</h3>
+      <p>Mars in 2nd, 4th, 7th, 8th or 12th house from Lagna is called Manglik Dosha. If both persons are Manglik, the dosha is cancelled. Various exceptions apply as per BV Raman's commentaries.</p>
+    </div>
+
+    <div class="about-section">
+      <h3>Scriptural Sources</h3>
+      <ul>
+        <li>Brihat Parashara Hora Shastra (BPHS)</li>
+        <li>Muhurta Chintamani</li>
+        <li>Jataka Parijata</li>
+        <li>Dharmasindhu</li>
+        <li>Vivaha Prapama</li>
+        <li>Saravali</li>
+      </ul>
+    </div>
+
+    <div class="about-section">
+      <h3>Engine</h3>
+      <p>Calculations use PyJHora (Open Astro Technologies) and Swiss Ephemeris for precise astronomical positions. All computation is local — no internet required for calculations.</p>
+    </div>
+  </div>
+
+  <!-- Guru Photo Upload -->
+  <div class="card">
+    <div class="card-title">🖼️ Guru Photos</div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;line-height:1.5">
+      Upload photos of your Gurus. They appear as pencil sketches on the opening screen
+      and at the top of every PDF report with caption "Jai Gurudev".
+    </p>
+    <div class="form-row">
+      <div class="field">
+        <label>Photo (JPG / PNG)</label>
+        <input type="file" id="guru_file" accept="image/jpeg,image/png,image/jpg">
+      </div>
+      <div class="field">
+        <label>Caption</label>
+        <input type="text" id="guru_caption" placeholder="Jai Gurudev" value="Jai Gurudev">
+      </div>
+    </div>
+    <button class="submit-btn" style="background:linear-gradient(135deg,#4a0072,#9c4dcc);
+            font-size:0.85rem;padding:11px" onclick="uploadGuruPhoto()">
+      ⬆️ Upload Photo
+    </button>
+    <div id="guru-upload-status" class="save-status" style="margin-top:8px"></div>
+    <div id="guru-list" style="font-size:0.75rem;color:var(--muted);margin-top:8px"></div>
+  </div>
+
+  <div class="card" style="border:1px solid #ef9a9a; background:#fff8f8; margin-top:14px">
+    <div class="card-title" style="color:#b71c1c">⚠ Disclaimer</div>
+    <p style="font-size:0.78rem; color:#6b5b7b; line-height:1.6">
+      The information in this report is based on preliminary Vedic Ashtakoot Kundali compatibility analysis
+      using the Moon's Nakshatra at birth. This is an initial verification tool only. Detailed compatibility
+      requires validating individual horoscopes across multiple chart combinations, planetary positions,
+      dashas, transits, and compensations — many of which cannot be evaluated by automated computation alone.
+      Consult an experienced Jyotishi before making any matrimonial decisions.
+    </p>
+    <p style="font-size:0.75rem; color:#9e9e9e; margin-top:8px">
+      Information Provider: PSN Kumar · Gurusthan · Peddamangalaram, Hyderabad · Ph: 7032073049
+    </p>
+  </div>
+
+</main>
+
+<!-- Provider + Disclaimer footer -->
+<div id="footer-bar" style="position:fixed;bottom:0;left:0;right:0;z-index:500;
+            background:#2d0057;color:white;
+            display:flex;align-items:center;justify-content:space-between;
+            padding:0 16px;height:36px;font-size:0.72rem;
+            box-shadow:0 -2px 8px rgba(0,0,0,0.3);overflow:hidden;">
+  <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1">PSN Kumar &middot; Gurusthan, Hyderabad &middot; 7032073049</span>
+  <span id="footer-disclaimer" style="font-size:0.65rem;font-style:italic;opacity:0.8;white-space:nowrap;margin-left:12px;flex-shrink:0">Preliminary verification — consult a Jyotishi</span>
+</div>
+
+<!-- Workings Tab -->
+<main id="tab-workings" class="hidden">
+  <div class="card">
+    <div class="card-title">🔍 Step-by-Step Calculation Workings</div>
+    <p style="font-size:0.75rem;color:var(--muted);margin-bottom:12px">
+      Individualized reasoning for every factor — showing exactly how each score or pass/fail was arrived at
+      so you can verify against any other system.
+    </p>
+    <div id="workings-content">
+      <p style="font-size:0.8rem;color:var(--muted)">Run a calculation first to see detailed workings.</p>
+    </div>
+  </div>
+</main>
+
+<!-- History Tab -->
+<main id="tab-history" class="hidden">
+  <div class="card">
+    <div class="card-title">🕐 <span data-i18n="saved_records">Saved Records</span></div>
+    <p style="font-size:0.75rem;color:var(--muted);margin-bottom:12px">
+      All calculated results are saved automatically. Use <b>🔄 Recall</b> to reload birth details
+      into the form for re-calculation or comparison. Use <b>📥 PDF</b> to re-download any report.
+    </p>
+    <div id="history-list">
+      <p style="font-size:0.8rem;color:var(--muted)">Loading…</p>
+    </div>
+  </div>
+</main>
+
+<script>
+let selectedMethod = "North";
+let lastResult = null;
+let savedResultId = null;
+let _formSnapshot = {};
+let currentLang = localStorage.getItem('lang') || 'en';
+
+// ── JS Translation Dictionary ─────────────────────────────────────────────────
+const UI_STRINGS = {
+  app_title:           { en:'Kundali Milan', hi:'कुंडली मिलान', ta:'ஜாதக மிலான்', te:'కుండలీ మిలన్', kn:'ಕುಂಡಲಿ ಮಿಲನ್', ml:'കുണ്ഡലി മിലൻ' },
+  header_sub:          { en:'Vedic Ashtakoot Compatibility — Powered by PyJHora', hi:'वैदिक अष्टकूट अनुकूलता — PyJHora द्वारा', ta:'வேத அஷ்டகூட் பொருத்தம் — PyJHora', te:'వేద అష్టకూట్ అనుకూలత — PyJHora', kn:'ವೈದಿಕ ಅಷ್ಟಕೂಟ ಹೊಂದಾಣಿಕೆ — PyJHora', ml:'വൈദിക അഷ്ടകൂട് പൊരുത്തം — PyJHora' },
+  language:            { en:'Language', hi:'भाषा', ta:'மொழி', te:'భాష', kn:'ಭಾಷೆ', ml:'ഭാഷ' },
+  matching_system:     { en:'Matching System', hi:'मिलान पद्धति', ta:'பொருத்தம் முறை', te:'మ్యాచింగ్ పద్ధతి', kn:'ಹೊಂದಾಣಿಕೆ ಪದ್ಧತಿ', ml:'മ്യാച്ചിംഗ് സമ്പ്രദായം' },
+  north_india_btn:     { en:'North India', hi:'उत्तर भारत', ta:'வட இந்தியா', te:'ఉత్తర భారతదేశం', kn:'ಉತ್ತರ ಭಾರತ', ml:'വടക്കേ ഇന്ത്യ' },
+  south_india_btn:     { en:'South India', hi:'दक्षिण भारत', ta:'தென் இந்தியா', te:'దక్షిణ భారతదేశం', kn:'ದಕ್ಷಿಣ ಭಾರತ', ml:'തെക്കൻ ഇന്ത്യ' },
+  person1_label:       { en:'Person 1 (Groom / Boy)', hi:'व्यक्ति 1 (वर / लड़का)', ta:'நபர் 1 (மணமகன்)', te:'వ్యక్తి 1 (వరుడు)', kn:'ವ್ಯಕ್ತಿ 1 (ವರ)', ml:'വ്യക്തി 1 (വരൻ)' },
+  person2_label:       { en:'Person 2 (Bride / Girl)', hi:'व्यक्ति 2 (वधू / लड़की)', ta:'நபர் 2 (மணமகள்)', te:'వ్యక్తి 2 (వధువు)', kn:'ವ್ಯಕ್ತಿ 2 (ವಧು)', ml:'വ്യക്തി 2 (വധു)' },
+  load_from_history:   { en:'🕐 Load from history', hi:'🕐 इतिहास से लोड करें', ta:'🕐 வரலாற்றிலிருந்து ஏற்று', te:'🕐 చరిత్ర నుండి లోడ్ చేయండి', kn:'🕐 ಇತಿಹಾಸದಿಂದ ಲೋಡ್ ಮಾಡಿ', ml:'🕐 ചരിത്രത്തിൽ നിന്ന് ലോഡ് ചെയ്യുക' },
+  full_name:           { en:'Full Name', hi:'पूरा नाम', ta:'முழு பெயர்', te:'పూర్తి పేరు', kn:'ಪೂರ್ಣ ಹೆಸರು', ml:'പൂർണ്ണ പേര്' },
+  date_of_birth:       { en:'Date of Birth', hi:'जन्म तिथि', ta:'பிறந்த தேதி', te:'పుట్టిన తేదీ', kn:'ಹುಟ್ಟಿದ ದಿನಾಂಕ', ml:'ജനന തീയതി' },
+  time_of_birth:       { en:'Time of Birth', hi:'जन्म समय', ta:'பிறந்த நேரம்', te:'పుట్టిన సమయం', kn:'ಹುಟ್ಟಿದ ಸಮಯ', ml:'ജനന സമയം' },
+  birth_place:         { en:'Birth Place', hi:'जन्म स्थान', ta:'பிறந்த இடம்', te:'పుట్టిన స్థలం', kn:'ಹುಟ್ಟಿದ ಸ್ಥಳ', ml:'ജന്മസ്ഥലം' },
+  calculate:           { en:'Calculate Compatibility', hi:'अनुकूलता की गणना करें', ta:'பொருத்தம் கணக்கிடு', te:'అనుకూలత లెక్కించు', kn:'ಹೊಂದಾಣಿಕೆ ಲೆಕ್ಕಿಸಿ', ml:'പൊരുത്തം കണക്കാക്കുക' },
+  computing:           { en:'Computing Kundali Milan…', hi:'कुंडली मिलान गणना हो रही है…', ta:'ஜாதக மிலான் கணக்கிடுகிறது…', te:'కుండలీ మిలన్ లెక్కిస్తోంది…', kn:'ಕುಂಡಲಿ ಮಿಲನ್ ಲೆಕ್ಕಿಸಲಾಗುತ್ತಿದೆ…', ml:'കുണ്ഡലി മിലൻ കണക്കാക്കുന്നു…' },
+  download_pdf:        { en:'Download PDF Report', hi:'PDF रिपोर्ट डाउनलोड करें', ta:'PDF அறிக்கை பதிவிறக்கு', te:'PDF నివేదిక డౌన్లోడ్ చేయండి', kn:'PDF ವರದಿ ಡೌನ್ಲೋಡ್ ಮಾಡಿ', ml:'PDF റിപ്പോർട്ട് ഡൗൺലോഡ് ചെയ്യുക' },
+  recalculate:         { en:'Recalculate', hi:'पुनः गणना', ta:'மீண்டும் கணக்கிடு', te:'మళ్ళీ లెక్కించు', kn:'ಮರು ಲೆಕ್ಕಿಸಿ', ml:'വീണ്ടും കണക്കാക്കുക' },
+  saved_records:       { en:'Saved Records', hi:'सहेजे गए रिकॉर्ड', ta:'சேமித்த பதிவுகள்', te:'సేవ్ చేసిన రికార్డులు', kn:'ಉಳಿಸಿದ ದಾಖಲೆಗಳು', ml:'സേവ് ചെയ്ത റെക്കോർഡുകൾ' },
+  tab_enter:           { en:'✍️ Enter', hi:'✍️ दर्ज करें', ta:'✍️ உள்ளிடு', te:'✍️ నమోదు', kn:'✍️ ನಮೂದಿಸಿ', ml:'✍️ നൽകുക' },
+  tab_results:         { en:'📊 Results', hi:'📊 परिणाम', ta:'📊 முடிவுகள்', te:'📊 ఫలితాలు', kn:'📊 ಫಲಿತಾಂಶ', ml:'📊 ഫലങ്ങൾ' },
+  tab_workings:        { en:'🔍 Workings', hi:'🔍 कार्यप्रणाली', ta:'🔍 கணக்கீடு', te:'🔍 గణన', kn:'🔍 ಲೆಕ್ಕಾಚಾರ', ml:'🔍 കണക്കുകൂട്ടൽ' },
+  tab_history:         { en:'🕐 History', hi:'🕐 इतिहास', ta:'🕐 வரலாறு', te:'🕐 చరిత్ర', kn:'🕐 ಇತಿಹಾಸ', ml:'🕐 ചരിത്രം' },
+  tab_about:           { en:'📖 About', hi:'📖 परिचय', ta:'📖 பற்றி', te:'📖 గురించి', kn:'📖 ಬಗ್ಗೆ', ml:'📖 കുറിച്ച്' },
+  auto_saved:          { en:'✓ Auto-saved — PDF ready', hi:'✓ स्वतः सहेजा — PDF तैयार', ta:'✓ தானாக சேமிக்கப்பட்டது — PDF தயார்', te:'✓ స్వయంచాలకంగా సేవ్ — PDF సిద్ధం', kn:'✓ ಸ್ವಯಂ ಉಳಿಸಲಾಗಿದೆ — PDF ಸಿದ್ಧ', ml:'✓ ഓട്ടോ-സേവ് — PDF റെഡി' },
+};
+
+function tr(key) {
+  const entry = UI_STRINGS[key];
+  if (!entry) return key;
+  return entry[currentLang] || entry['en'] || key;
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = tr(key);
+    if (val) el.textContent = val;
+  });
+  // Update tab buttons (they have data-i18n-tab)
+  document.querySelectorAll('[data-i18n-tab]').forEach(el => {
+    const key = el.getAttribute('data-i18n-tab');
+    const val = tr(key);
+    if (val) el.textContent = val;
+  });
+  // Update lang dropdown to match
+  const sel = document.getElementById('lang_select');
+  if (sel) sel.value = lang;
+  // Update document language
+  document.documentElement.lang = lang;
+}
+
+function applyStoredLanguage() {
+  const lang = localStorage.getItem('lang') || 'en';
+  if (lang !== 'en') setLanguage(lang);
+  const sel = document.getElementById('lang_select');
+  if (sel) sel.value = lang;
+}
+
+// ── Tabs ──────────────────────────────────────────
+const TABS = ['form','results','workings','history','about'];
+
+function switchTab(tab) {
+  TABS.forEach(t => document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab));
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', TABS[i] === tab);
+  });
+  if (tab === 'history') loadSavedHistory();
+}
+
+function enableResultsTab() {
+  document.getElementById('results-tab-btn').style.opacity = '1';
+  document.getElementById('workings-tab-btn').style.opacity = '1';
+}
+
+// ── Method ────────────────────────────────────────
+function setMethod(m) {
+  selectedMethod = m;
+  document.getElementById('btn-north').classList.toggle('active', m === 'North');
+  document.getElementById('btn-south').classList.toggle('active', m === 'South');
+}
+
+// ── City Search ───────────────────────────────────
+let citySearchTimer = {};
+
+async function searchCity(prefix) {
+  const input = document.getElementById(prefix + '_city_input');
+  const dropdown = document.getElementById(prefix + '_city_dropdown');
+  const q = input.value.trim();
+  clearTimeout(citySearchTimer[prefix]);
+  if (q.length < 2) { dropdown.classList.remove('open'); return; }
+  citySearchTimer[prefix] = setTimeout(async () => {
+    try {
+      const res = await fetch('/api/cities?q=' + encodeURIComponent(q));
+      const cities = await res.json();
+      renderCityDropdown(prefix, cities, dropdown);
+    } catch(e) { dropdown.classList.remove('open'); }
+  }, 250);
+}
+
+function renderCityDropdown(prefix, cities, dropdown) {
+  if (!cities.length) { dropdown.classList.remove('open'); return; }
+  dropdown.innerHTML = cities.map(c => `
+    <div class="city-option" onclick='selectCity("${prefix}", ${JSON.stringify(c)})'>
+      <div class="city-name">${c.city || c.name || ''}</div>
+      <div class="city-sub">${c.country || ''} · ${Number(c.lat||0).toFixed(2)}°N ${Number(c.lng||c.lon||0).toFixed(2)}°E · UTC${formatTZ(c.timezone)}</div>
+    </div>
+  `).join('');
+  dropdown.classList.add('open');
+}
+
+function selectCity(prefix, c) {
+  const lat = c.lat != null ? c.lat : (c.latitude || 0);
+  const lon = c.lng != null ? c.lng : (c.longitude || c.lon || 0);
+  const tz  = parseTZ(c.timezone);
+  const name = (c.city || c.name || '') + (c.country ? ', ' + c.country : '');
+  document.getElementById(prefix + '_city_input').value = name;
+  document.getElementById(prefix + '_lat').value   = lat;
+  document.getElementById(prefix + '_lon').value   = lon;
+  document.getElementById(prefix + '_tz').value    = tz;
+  document.getElementById(prefix + '_place').value = name;
+  document.getElementById(prefix + '_city_dropdown').classList.remove('open');
+}
+
+function parseTZ(tz) {
+  if (!tz) return 5.5;
+  if (typeof tz === 'number') return tz;
+  const m = String(tz).match(/([+-]?\d+):(\d+)/);
+  if (m) return parseInt(m[1]) + parseInt(m[2]) / 60 * Math.sign(parseInt(m[1]) || 1);
+  return 5.5;
+}
+
+function formatTZ(tz) {
+  const h = parseTZ(tz);
+  const sign = h >= 0 ? '+' : '-';
+  const abs = Math.abs(h);
+  const hh = Math.floor(abs);
+  const mm = Math.round((abs - hh) * 60);
+  return `${sign}${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+}
+
+// ── History Search ────────────────────────────────
+let historyTimer = {};
+
+async function searchHistory(prefix) {
+  const input = document.getElementById(prefix + '_history_input');
+  const dropdown = document.getElementById(prefix + '_history_dropdown');
+  const q = input.value.trim();
+  clearTimeout(historyTimer[prefix]);
+  historyTimer[prefix] = setTimeout(async () => {
+    try {
+      const url = '/api/persons' + (q.length >= 1 ? '?q=' + encodeURIComponent(q) : '');
+      const res = await fetch(url);
+      const persons = await res.json();
+      renderHistoryDropdown(prefix, persons, dropdown);
+    } catch(e) { dropdown.classList.remove('open'); }
+  }, 200);
+}
+
+function renderHistoryDropdown(prefix, persons, dropdown) {
+  if (!persons.length) { dropdown.classList.remove('open'); return; }
+  dropdown.innerHTML = persons.map(p => {
+    const safe = JSON.stringify(p).replace(/'/g,"&#39;");
+    return `<div class="history-option" onclick='loadFromHistory("${prefix}",${safe})'>
+      <div class="h-name">${escHtml(p.name)}</div>
+      <div class="h-sub">${escHtml(p.nakshatra||'')} · ${escHtml(p.rashi||'')} · ${p.dob||''} · ${escHtml(p.place||'')}</div>
+    </div>`;
+  }).join('');
+  dropdown.classList.add('open');
+}
+
+function loadFromHistory(prefix, p) {
+  document.getElementById(prefix + '_name').value = p.name || '';
+  if (p.dob) document.getElementById(prefix + '_date').value = p.dob;
+  if (p.tob) document.getElementById(prefix + '_time').value = p.tob.substring(0, 5);
+  if (p.lat != null) document.getElementById(prefix + '_lat').value = p.lat;
+  if (p.lon != null) document.getElementById(prefix + '_lon').value = p.lon;
+  if (p.tz  != null) document.getElementById(prefix + '_tz').value  = p.tz;
+  if (p.place) {
+    document.getElementById(prefix + '_place').value = p.place;
+    document.getElementById(prefix + '_city_input').value = p.place;
+  }
+  document.getElementById(prefix + '_history_dropdown').classList.remove('open');
+  document.getElementById(prefix + '_history_input').value = '';
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.city-wrap')) {
+    document.querySelectorAll('.city-dropdown, .history-dropdown')
+            .forEach(d => d.classList.remove('open'));
+  }
+});
+
+// ── Calculate ─────────────────────────────────────
+async function calculate() {
+  const errBox = document.getElementById('error-box');
+  errBox.style.display = 'none';
+  const btn = document.getElementById('calc-btn');
+  const loader = document.getElementById('loading');
+
+  const p1d = document.getElementById('p1_date').value.split('-');
+  const p1t = document.getElementById('p1_time').value.split(':');
+  const p2d = document.getElementById('p2_date').value.split('-');
+  const p2t = document.getElementById('p2_time').value.split(':');
+
+  if (!p1d[0] || !p2d[0]) { showError('Please fill in birth dates for both persons.'); return; }
+
+  const params = new URLSearchParams({
+    p1_name:  document.getElementById('p1_name').value || 'Person 1',
+    p1_year:  p1d[0], p1_month: p1d[1], p1_day: p1d[2],
+    p1_hour:  p1t[0]||'0', p1_min: p1t[1]||'0', p1_sec: '0',
+    p1_lat:   document.getElementById('p1_lat').value,
+    p1_lon:   document.getElementById('p1_lon').value,
+    p1_tz:    document.getElementById('p1_tz').value,
+    p1_place: document.getElementById('p1_place').value,
+    p2_name:  document.getElementById('p2_name').value || 'Person 2',
+    p2_year:  p2d[0], p2_month: p2d[1], p2_day: p2d[2],
+    p2_hour:  p2t[0]||'0', p2_min: p2t[1]||'0', p2_sec: '0',
+    p2_lat:   document.getElementById('p2_lat').value,
+    p2_lon:   document.getElementById('p2_lon').value,
+    p2_tz:    document.getElementById('p2_tz').value,
+    p2_place: document.getElementById('p2_place').value,
+    method: selectedMethod,
+  });
+
+  // snapshot form values for save
+  _formSnapshot = {
+    p1_dob: document.getElementById('p1_date').value,
+    p1_tob: document.getElementById('p1_time').value,
+    p1_lat: parseFloat(document.getElementById('p1_lat').value),
+    p1_lon: parseFloat(document.getElementById('p1_lon').value),
+    p1_tz:  parseFloat(document.getElementById('p1_tz').value),
+    p2_dob: document.getElementById('p2_date').value,
+    p2_tob: document.getElementById('p2_time').value,
+    p2_lat: parseFloat(document.getElementById('p2_lat').value),
+    p2_lon: parseFloat(document.getElementById('p2_lon').value),
+    p2_tz:  parseFloat(document.getElementById('p2_tz').value),
+  };
+
+  btn.disabled = true;
+  loader.style.display = 'block';
+  btn.textContent = 'Computing…';
+
+  
+  try {
+    const fetchPerson = async (prefix) => {
+        const d = document.getElementById(prefix + '_date').value;
+        const t = document.getElementById(prefix + '_time').value;
+        const lat = document.getElementById(prefix + '_lat').value;
+        const lon = document.getElementById(prefix + '_lon').value;
+        const tz = document.getElementById(prefix + '_tz').value;
+        const name = document.getElementById(prefix + '_name').value || 'Person';
+        // Connect to the external Bhargava Panchangam API
+        const url = `https://bhargava-panchangam.onrender.com/api/panchanga?date=${encodeURIComponent(d)}&time=${encodeURIComponent(t)}&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&tz=${encodeURIComponent(tz)}&timezone=Asia/Kolkata`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if(data.error) throw new Error(data.error);
+        return { name, api: data };
+    };
+
+    const [p1, p2] = await Promise.all([fetchPerson('p1'), fetchPerson('p2')]);
+    
+    // Process local engine
+    const isSouth = (selectedMethod === 'South');
+    const p1_nak = p1.api.nakshatra.number;
+    const p2_nak = p2.api.nakshatra.number;
+    const p1_rashi = p1.api.rasi.number;
+    const p2_rashi = p2.api.rasi.number;
+
+    let totalScore = 0;
+    let percent = 0;
+    let label = '';
+    let description = '';
+    let kootsArray = [];
+    let poruthamsArray = [];
+    let pPassed = 0;
+    let critical = [];
+
+    if(isSouth) {
+        poruthamsArray = window.AstroCalc.calculate_south(p1_nak, p2_nak, p1_rashi, p2_rashi);
+        pPassed = poruthamsArray.filter(p => p.pass).length;
+        percent = Math.round((pPassed / 10) * 100);
+        if(pPassed >= 7) { label = "Uttama"; description = "Excellent match"; }
+        else if(pPassed >= 5) { label = "Madhyama"; description = "Average match"; }
+        else { label = "Adhama"; description = "Not recommended"; }
+    } else {
+        const w = window.AstroCalc.calculate_north(p1_nak, p2_nak, p1_rashi, p2_rashi);
+        kootsArray = [
+            {name: 'Varna', score: w.varna.score, max: 1, percent: (w.varna.score/1)*100, status: w.varna.score===1?'good':'poor', scripture: w.varna.steps.join(' | '), workings: w.varna},
+            {name: 'Vashya', score: w.vashya.score, max: 2, percent: (w.vashya.score/2)*100, status: w.vashya.score===2?'good':w.vashya.score===1?'medium':'poor', scripture: w.vashya.steps.join(' | '), workings: w.vashya},
+            {name: 'Tara / Dina', score: w.tara.score, max: 3, percent: (w.tara.score/3)*100, status: w.tara.score>=2?'good':'poor', scripture: w.tara.steps.join(' | '), workings: w.tara},
+            {name: 'Yoni', score: w.yoni.score, max: 4, percent: (w.yoni.score/4)*100, status: w.yoni.score>=3?'good':w.yoni.score>=2?'medium':'poor', scripture: w.yoni.steps.join(' | '), workings: w.yoni},
+            {name: 'Graha Maitri', score: w.graha_maitri.score, max: 5, percent: (w.graha_maitri.score/5)*100, status: w.graha_maitri.score>=4?'good':w.graha_maitri.score>=3?'medium':'poor', scripture: w.graha_maitri.steps.join(' | '), workings: w.graha_maitri},
+            {name: 'Gana', score: w.gana.score, max: 6, percent: (w.gana.score/6)*100, status: w.gana.score>=5?'good':w.gana.score>=1?'medium':'poor', scripture: w.gana.steps.join(' | '), workings: w.gana},
+            {name: 'Bhakoot', score: w.bhakoot.score, max: 7, percent: (w.bhakoot.score/7)*100, status: w.bhakoot.score===7?'good':'poor', scripture: w.bhakoot.steps.join(' | '), workings: w.bhakoot},
+            {name: 'Nadi', score: w.nadi.score, max: 8, percent: (w.nadi.score/8)*100, status: w.nadi.score===8?'good':'poor', scripture: w.nadi.steps.join(' | '), workings: w.nadi}
+        ];
+        totalScore = kootsArray.reduce((acc, k) => acc + k.score, 0);
+        percent = Math.round((totalScore / 36) * 100);
+        if(totalScore >= 28) { label = "Very Good"; description = "Highly auspicious match"; }
+        else if(totalScore >= 24) { label = "Good"; description = "Auspicious match"; }
+        else if(totalScore >= 18) { label = "Average"; description = "Proceed with remedies"; }
+        else { label = "Incompatible"; description = "Not recommended"; }
+    }
+
+    const data = {
+        method: selectedMethod,
+        score_percent: percent,
+        total_score: totalScore,
+        poruthams_passed: pPassed,
+        label: label,
+        description: description,
+        person1: {
+            name: p1.name,
+            nakshatra: p1.api.nakshatra.name,
+            pada: '?',
+            nakshatra_number: p1_nak,
+            rashi: p1.api.rasi.name,
+            manglik: null
+        },
+        person2: {
+            name: p2.name,
+            nakshatra: p2.api.nakshatra.name,
+            pada: '?',
+            nakshatra_number: p2_nak,
+            rashi: p2.api.rasi.name,
+            manglik: null
+        },
+        koots: kootsArray,
+        poruthams: poruthamsArray,
+        extra_checks: [],
+        manglik_cancelled: false,
+        scriptural_notes: []
+    };
+
+    lastResult = data;
+
+    savedResultId = null;
+    renderResults(data);
+    enableResultsTab();
+    switchTab('results');
+    // Auto-save silently so record is always stored
+    autoSave();
+  } catch(e) {
+    showError('Calculation failed: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    loader.style.display = 'none';
+    btn.textContent = '🔮 Calculate Compatibility';
+  }
+}
+
+function showError(msg) {
+  const b = document.getElementById('error-box');
+  b.textContent = '⚠ ' + msg;
+  b.style.display = 'block';
+  b.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// ── Auto-save (runs silently after every calculation) ──────────────────────────
+async function autoSave() {
+  if (!lastResult) return;
+  try {
+    const body = Object.assign({ result: lastResult }, _formSnapshot);
+    return; // const res = await fetch('/api/save', {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (data.result_id) {
+      savedResultId = data.result_id;
+      const bar = document.getElementById('pdf-bar');
+      if (bar) bar.disabled = false;
+      const st = document.getElementById('save-status');
+      if (st) { st.textContent = tr('auto_saved'); st.style.color = 'var(--good)'; }
+    }
+  } catch(e) { /* silent */ }
+}
+
+// ── Download PDF ───────────────────────────────────
+async function saveAndDownload() {
+  const bar = document.getElementById('pdf-bar');
+  const status = document.getElementById('save-status');
+  if (bar) bar.disabled = true;
+  try {
+    if (!savedResultId) {
+      if (!lastResult) return;
+      const body = Object.assign({ result: lastResult }, _formSnapshot);
+      return; // const res = await fetch('/api/save', {
+        method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      savedResultId = data.result_id;
+    }
+    window.open('/api/pdf?id=' + savedResultId + '&lang=' + currentLang, '_blank');
+    if (status) { status.textContent = '✓ PDF downloading…'; status.style.color = 'var(--good)'; }
+  } catch(e) {
+    if (status) { status.textContent = '⚠ ' + e.message; status.style.color = 'var(--bad)'; }
+  } finally {
+    if (bar) bar.disabled = false;
+  }
+}
+
+// ── Saved History ──────────────────────────────────
+async function loadSavedHistory() {
+  const el = document.getElementById('history-list');
+  if (!el) return;
+  el.innerHTML = '<p style="font-size:0.8rem;color:var(--muted)">Loading…</p>';
+  try {
+    const rows = [];
+    if (!rows.length) {
+      el.innerHTML = '<p style="font-size:0.8rem;color:var(--muted)">No saved records yet. Calculate a compatibility to save one.</p>';
+      return;
+    }
+    el.innerHTML = rows.map(r => `
+      <div class="hist-row">
+        <div class="hist-info">
+          <div class="hist-names">${escHtml(r.p1_name)} &times; ${escHtml(r.p2_name)}</div>
+          <div class="hist-sub">
+            ${escHtml(r.p1_nakshatra||'—')} &middot; ${escHtml(r.p2_nakshatra||'—')} &middot;
+            ${r.method} &middot; Score <b>${r.score}</b> &middot; ${escHtml(r.label||'')}
+          </div>
+          <div class="hist-date">${(r.created||'').substring(0,16)}</div>
+        </div>
+        <button class="hist-btn recall" onclick="recallToForm(${r.p1_id},${r.p2_id})">🔄 Recall</button>
+        <button class="hist-btn pdf"    onclick="window.open('/api/pdf?id=${r.id}&lang='+currentLang,'_blank')">📥 PDF</button>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = '<p style="font-size:0.8rem;color:var(--bad)">Error loading history.</p>';
+  }
+}
+
+async function recallToForm(p1Id, p2Id) {
+  try {
+    const persons = await fetch('/api/persons').then(r => r.json());
+    const p1 = persons.find(p => p.id === p1Id);
+    const p2 = persons.find(p => p.id === p2Id);
+    if (p1) loadFromHistory('p1', p1);
+    if (p2) loadFromHistory('p2', p2);
+    switchTab('form');
+  } catch(e) { alert('Could not recall: ' + e.message); }
+}
+
+// ── Guru Photos ────────────────────────────────────
+async function loadGuruPhotos() {
+  console.log('loadGuruPhotos called');
+  try {
+    return; // Backend disabled
+    const photos = await res.json();
+    const banner = document.getElementById('guru-banner');
+    const display = document.getElementById('guru-display');
+    if (!photos.length) { banner.style.display = 'none'; return; }
+    banner.style.display = 'block';
+    display.innerHTML = photos.map(p => `
+      <div style="text-align:center">
+        <img src="/guru_photos/${escHtml(p.filename)}"
+             alt="${escHtml(p.caption||'Guru')}"
+             style="width:88px;height:110px;object-fit:cover;
+                    border-radius:50% / 45%;
+                    filter:grayscale(1) contrast(1.75) brightness(1.1);
+                    border:2px solid rgba(255,255,255,0.4);
+                    box-shadow:0 0 14px rgba(255,160,0,0.4);">
+        <div style="font-size:0.68rem;color:rgba(255,220,100,0.9);
+                    margin-top:6px;font-style:italic;letter-spacing:0.8px;font-weight:600">
+          ${escHtml(p.caption||'')}
+        </div>
+      </div>`).join('');
+    // update list in upload section
+    const listEl = document.getElementById('guru-list');
+    if (listEl) listEl.textContent =
+      photos.length ? 'Registered: ' + photos.map(p => p.caption || p.filename).join(' · ') : '';
+  } catch(e) {
+    console.error('loadGuruPhotos error:', e);
+  }
+}
+
+async function uploadGuruPhoto() {
+  const fileEl = document.getElementById('guru_file');
+  const caption = document.getElementById('guru_caption').value.trim() || 'Jai Gurudev';
+  const status  = document.getElementById('guru-upload-status');
+  if (!fileEl.files.length) { status.textContent = '⚠ Select a photo first.'; return; }
+  const fd = new FormData();
+  fd.append('photo', fileEl.files[0]);
+  fd.append('caption', caption);
+  status.textContent = 'Uploading…';
+  try {
+    throw new Error('Backend disabled in browser-only mode');
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    status.textContent = '✓ Uploaded: ' + data.filename;
+    status.style.color = 'var(--good)';
+    fileEl.value = '';
+    loadGuruPhotos();
+  } catch(e) {
+    status.textContent = '⚠ ' + e.message;
+    status.style.color = 'var(--bad)';
+  }
+}
+
+// ── Render Results ─────────────────────────────────
+function renderResults(d) {
+  renderScoreHero(d);
+  renderPersonSummary(d);
+  renderKootsTable(d);
+  renderExtraChecks(d);
+  renderManglik(d);
+  renderNotes(d);
+  renderWorkings(d);
+}
+
+function renderScoreHero(d) {
+  const isSouth = d.method === 'South';
+  const pct = d.score_percent;
+  const r = 54; const circ = 2 * Math.PI * r;
+  const fill = circ * (pct / 100);
+  const bg = d.color || '#6a1b9a';
+  const scoreNum = isSouth ? d.poruthams_passed : d.total_score;
+  const scoreDen = isSouth ? '10 poruthams' : 'of 36';
+  let critHtml = '';
+  if (isSouth && d.critical_failures && d.critical_failures.length) {
+    critHtml = `<div style="margin-top:8px;padding:6px 10px;background:#ffebee;border-radius:6px;font-size:0.75rem;color:#b71c1c;font-weight:600">
+      ⚠ Critical failure: ${escHtml(d.critical_failures.join(', '))}
+    </div>`;
+  }
+  document.getElementById('score-hero').innerHTML = `
+    <div style="background:linear-gradient(135deg,${bg}22,${bg}11);border-radius:10px;padding:16px">
+      <div class="score-ring-wrap">
+        <svg width="130" height="130" viewBox="0 0 130 130">
+          <circle cx="65" cy="65" r="${r}" fill="none" stroke="#e0d0f0" stroke-width="10"/>
+          <circle cx="65" cy="65" r="${r}" fill="none" stroke="${bg}" stroke-width="10"
+                  stroke-dasharray="${fill} ${circ}" stroke-linecap="round"/>
+        </svg>
+        <div class="score-text">
+          <div class="score-num" style="color:${bg}">${scoreNum}</div>
+          <div class="score-denom">${scoreDen}</div>
+        </div>
+      </div>
+      <div class="score-label" style="color:${bg}">${d.label}</div>
+      <div class="score-desc">${d.description}</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:6px">
+        ${isSouth ? 'South India Dashakoot — 10 Poruthams (pass/fail)' : 'North India Ashtakoota — 36 point scoring'}
+      </div>
+      ${critHtml}
+    </div>`;
+}
+
+function renderPersonSummary(d) {
+  function personCard(p, color) {
+    const m = p.manglik;
+    const isManglik = m && m.is_manglik && !m.exception_applies;
+    const isCancelled = d.manglik_cancelled;
+    return `<div class="person-card">
+      <h4 style="color:${color}">${escHtml(p.name)}</h4>
+      <div class="nak">🌟 ${p.nakshatra}</div>
+      <div class="pada">Pada ${p.pada} · #${p.nakshatra_number}</div>
+      <div class="rash">♏ ${p.rashi}</div>
+      ${isManglik ? `<span class="manglik-tag${isCancelled?' cancelled':''}">
+        ${isCancelled?'✓ Manglik (Cancelled)':'⚠ Manglik'}</span>` : ''}
+    </div>`;
+  }
+  document.getElementById('person-summary').innerHTML =
+    personCard(d.person1,'#4a0072') + personCard(d.person2,'#e65100');
+}
+
+function renderKootsTable(d) {
+  const isSouth = d.method === 'South';
+  const tc = d.color || '#6a1b9a';
+  let html = '';
+
+  if (isSouth) {
+    // South India: show 10 poruthams as pass/fail rows
+    (d.poruthams || []).forEach((p, i) => {
+      const cls = p.pass ? 'good' : 'poor';
+      const imp = p.importance === 'CRITICAL' ? ' 🚨' : p.importance === 'HIGH' ? ' ⚠️' : '';
+      html += `<div class="koot-row" id="koot-${i}">
+        <div class="koot-header">
+          <span class="koot-name">${p.number}. ${escHtml(p.name)}${imp}</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="koot-score ${cls}">${p.pass ? '✅ Pass' : '❌ Fail'}</span>
+            <span class="expand-icon" onclick="toggleKoot(${i})">ℹ️</span>
+          </div>
+        </div>
+        <div class="koot-detail">${escHtml(p.meaning)}</div>
+      </div>`;
+    });
+    document.getElementById('koots-table').innerHTML = html;
+    document.getElementById('total-row').innerHTML =
+      `<span class="total-label">Poruthams Satisfied</span>
+       <span class="total-value" style="color:${tc}">${d.poruthams_passed} / 10 &nbsp;(${d.score_percent}%) — minimum 6 required</span>`;
+  } else {
+    // North India: 8 koots with scores
+    d.koots.forEach((k, i) => {
+      html += `<div class="koot-row" id="koot-${i}">
+        <div class="koot-header">
+          <span class="koot-name">${escHtml(k.name)}</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="koot-score ${k.status}">${k.score} / ${k.max}</span>
+            <span class="expand-icon" onclick="toggleKoot(${i})">ℹ️</span>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill ${k.status}" style="width:${k.percent}%"></div></div>
+        <div class="koot-detail">${escHtml(k.scripture)}</div>
+      </div>`;
+    });
+    document.getElementById('koots-table').innerHTML = html;
+    document.getElementById('total-row').innerHTML =
+      `<span class="total-label">Total Guna Score</span>
+       <span class="total-value" style="color:${tc}">${d.total_score} / 36 &nbsp;(${d.score_percent}%)</span>`;
+  }
+
+  // Update card title
+  document.querySelector('#tab-results .card-title').textContent =
+    isSouth ? '🔢 10 Poruthams (South India Dashakoot)' : '🔢 Ashtakoota Scores (North India)';
+}
+
+function toggleKoot(i) {
+  document.getElementById('koot-' + i).classList.toggle('expanded');
+}
+
+function renderExtraChecks(d) {
+  let html = '';
+  d.extra_checks.forEach(c => {
+    const cls = c.pass ? 'pass' : 'fail';
+    html += `<div class="extra-item ${cls}">
+      <div class="extra-name ${cls}">${c.name}</div>
+      <span class="extra-badge ${c.importance}">${c.importance}</span>
+      <div class="extra-status">${c.pass ? '✅ Pass' : '❌ Fail'}</div>
+      <div class="extra-meaning">${c.meaning}</div>
+    </div>`;
+  });
+  document.getElementById('extra-grid').innerHTML = html;
+}
+
+function renderManglik(d) {
+  const n1 = d.person1.name, n2 = d.person2.name;
+  function row(name, m) {
+    if (!m) return '';
+    const status = m.is_manglik
+      ? (m.exception_applies
+          ? `<span style="color:#2e7d32">⚠️ Manglik (Exception — effectively cancelled)</span>`
+          : (d.manglik_cancelled
+              ? `<span style="color:#2e7d32">⚠️ Manglik (Cancelled — both Manglik)</span>`
+              : `<span style="color:#b71c1c">⚠️ Manglik Dosha present</span>`))
+      : `<span style="color:#2e7d32">✅ Not Manglik</span>`;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;
+                        padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-weight:600;font-size:0.85rem">${escHtml(name)}</span>
+      <span style="font-size:0.8rem">${status}</span>
+    </div>`;
+  }
+  document.getElementById('manglik-card').innerHTML = `
+    <div class="card-title">♂️ Manglik (Kuja) Dosha</div>
+    ${row(n1, d.person1.manglik)}${row(n2, d.person2.manglik)}
+    <p style="font-size:0.72rem;color:var(--muted);margin-top:8px;line-height:1.5">
+      Mars in 2nd, 4th, 7th, 8th or 12th from Lagna = Manglik Dosha.
+      Mutual cancellation if both persons are Manglik.
+    </p>`;
+}
+
+function renderNotes(d) {
+  const ICONS = {good:'✨',info:'ℹ️',warning:'⚠️',critical:'🚨'};
+  let html = '<div class="card-title">📜 Scriptural Analysis</div>';
+  if (!d.scriptural_notes.length) {
+    html += '<p style="font-size:0.8rem;color:var(--muted)">No special notes.</p>';
+  } else {
+    d.scriptural_notes.forEach(n => {
+      html += `<div class="note ${n.type}">
+        <div class="note-icon">${ICONS[n.type]||'ℹ️'}</div>
+        <div class="note-body"><h4>${escHtml(n.title)}</h4><p>${escHtml(n.text)}</p></div>
+      </div>`;
+    });
+  }
+  document.getElementById('notes-card').innerHTML = html;
+}
+
+// ── Render Workings Tab ────────────────────────────
+function renderWorkings(d) {
+  const el = document.getElementById('workings-content');
+  if (!el) return;
+  const isSouth = d.method === 'South';
+  let html = '';
+
+  // Header summary
+  html += `<div style="background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:0.8rem;color:var(--muted)">
+    <b>${escHtml(d.person1.name)}</b>: ${escHtml(d.person1.nakshatra)} (#${d.person1.nakshatra_number}), Pada ${d.person1.pada}, ${escHtml(d.person1.rashi)}<br>
+    <b>${escHtml(d.person2.name)}</b>: ${escHtml(d.person2.nakshatra)} (#${d.person2.nakshatra_number}), Pada ${d.person2.pada}, ${escHtml(d.person2.rashi)}
+  </div>`;
+
+  if (isSouth) {
+    // South India: workings from each porutham
+    html += `<p style="font-size:0.78rem;color:var(--primary);font-weight:700;margin-bottom:10px">
+      South India Dashakoot — 10 Poruthams (each pass/fail)
+    </p>`;
+    (d.poruthams || []).forEach(p => {
+      const w = p.workings || {};
+      const passLabel = p.pass ? 'PASS' : 'FAIL';
+      const impBadge = p.importance === 'CRITICAL'
+        ? `<span class="work-badge CRITICAL">CRITICAL</span>` : '';
+      html += `<div class="work-section">
+        <div class="work-header">
+          <span class="work-title">${p.number}. ${escHtml(p.name)}</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            ${impBadge}
+            <span class="work-badge ${passLabel}">${passLabel}</span>
+          </div>
+        </div>
+        <div class="work-body">
+          <div class="work-values">Input values: ${escHtml(w.values || '')}</div>
+          <ul class="work-steps">
+            ${(w.steps || []).map(s => `<li>${escHtml(s)}</li>`).join('')}
+          </ul>
+          <div class="work-inference">Conclusion: ${escHtml(w.inference || '')}</div>
+          <div class="work-meaning">${escHtml(p.meaning || '')}</div>
+        </div>
+      </div>`;
+    });
+  } else {
+    // North India: workings from each koot
+    html += `<p style="font-size:0.78rem;color:var(--primary);font-weight:700;margin-bottom:10px">
+      North India Ashtakoota — 8 Koots (scored out of 36)
+    </p>`;
+    (d.koots || []).forEach(k => {
+      const w = k.workings || {};
+      html += `<div class="work-section">
+        <div class="work-header">
+          <span class="work-title">${escHtml(k.name)}</span>
+          <span class="work-badge score">${k.score} / ${k.max}</span>
+        </div>
+        <div class="work-body">
+          <div class="work-values">Input values: ${escHtml(w.values || '')}</div>
+          <ul class="work-steps">
+            ${(w.steps || []).map(s => `<li>${escHtml(s)}</li>`).join('')}
+          </ul>
+          <div class="work-inference">Conclusion: ${escHtml(w.inference || '')}</div>
+          <div class="work-meaning">${escHtml(k.scripture || '')}</div>
+        </div>
+      </div>`;
+    });
+  }
+
+  // Extra checks workings (always shown)
+  if ((d.extra_checks || []).length) {
+    html += `<p style="font-size:0.78rem;color:var(--primary);font-weight:700;margin:14px 0 10px">
+      Additional Checks (Rajju / Vedha / Mahendra / Sthree Dheerga)
+    </p>`;
+    d.extra_checks.forEach(c => {
+      html += `<div class="work-section">
+        <div class="work-header">
+          <span class="work-title">${escHtml(c.name)}</span>
+          <span class="work-badge ${c.pass ? 'PASS' : 'FAIL'}">${c.pass ? 'PASS' : 'FAIL'}</span>
+        </div>
+        <div class="work-body">
+          <div class="work-importance">Importance: ${escHtml(c.importance)}</div>
+          <div class="work-meaning">${escHtml(c.meaning)}</div>
+        </div>
+      </div>`;
+    });
+  }
+
+  el.innerHTML = html;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ───────────────────────────────────────────
+applyStoredLanguage();
+loadGuruPhotos();
+loadSavedHistory();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+</script>
+</body>
+</html>

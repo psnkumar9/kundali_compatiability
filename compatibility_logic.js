@@ -260,44 +260,85 @@ function calculate_south_poruthams(p1_nak, p2_nak, p1_rashi, p2_rashi) {
 
     // 1. Dina
     const [dpass, dcfg, dcat] = _dina_pass(p1_nak, p2_nak);
-    poruthams.push({name: "Dina Porutham", pass: dpass});
+    poruthams.push({
+        name: "Dina Porutham", number: 1, pass: dpass, importance: "MEDIUM",
+        meaning: "Birth star distance auspiciousness.",
+        workings: { steps: [], inference: dpass ? "PASS" : "FAIL" }
+    });
 
     // 2. Gana
     const [gpass, greason] = _gana_pass(p1_nak, p2_nak);
-    poruthams.push({name: "Gana Porutham", pass: gpass});
+    poruthams.push({
+        name: "Gana Porutham", number: 2, pass: gpass, importance: "MEDIUM",
+        meaning: "Temperament compatibility (Deva, Manushya, Rakshasa).",
+        workings: { steps: [greason], inference: gpass ? "PASS" : "FAIL" }
+    });
 
     // 3. Mahendra
     const mah_count = ((p1_nak - p2_nak + 27) % 27) + 1;
     const mah_pass = [4,7,10,13,16,19,22,25].includes(mah_count);
-    poruthams.push({name: "Mahendra Porutham", pass: mah_pass});
+    poruthams.push({
+        name: "Mahendra Porutham", number: 3, pass: mah_pass, importance: "MEDIUM",
+        meaning: "Longevity and progeny blessing.",
+        workings: { steps: [`Boy's star is at position ${mah_count} from Girl's star`], inference: mah_pass ? "PASS" : "FAIL" }
+    });
 
     // 4. Sthree Dheerga
-    poruthams.push({name: "Sthree Dheerga", pass: mah_count > 9});
+    poruthams.push({
+        name: "Sthree Dheerga", number: 4, pass: mah_count > 9, importance: "MEDIUM",
+        meaning: "Prosperity of the bride.",
+        workings: { steps: [`Distance is ${mah_count} stars`], inference: (mah_count > 9) ? "PASS" : "FAIL" }
+    });
 
     // 5. Yoni
     const [ypass, yreason2] = _yoni_pass(p1_nak, p2_nak);
-    poruthams.push({name: "Yoni Porutham", pass: ypass});
+    poruthams.push({
+        name: "Yoni Porutham", number: 5, pass: ypass, importance: "MEDIUM",
+        meaning: "Physical and temperamental compatibility via animal symbols.",
+        workings: { steps: [yreason2], inference: ypass ? "PASS" : "FAIL" }
+    });
 
     // 6. Rasi Adhipati
     const [rpass, rreason] = _rasi_adhipati_pass(p1_rashi, p2_rashi);
-    poruthams.push({name: "Rasi Porutham", pass: rpass});
+    poruthams.push({
+        name: "Rasi Adhipati Porutham", number: 6, pass: rpass, importance: "MEDIUM",
+        meaning: "Compatibility of the Moon sign lords.",
+        workings: { steps: [rreason], inference: rpass ? "PASS" : "FAIL" }
+    });
 
     // 7. Rajju
     const rj1 = _RAJJU[p1_nak];
     const rj2 = _RAJJU[p2_nak];
-    poruthams.push({name: "Rajju Porutham", pass: rj1 !== rj2});
+    poruthams.push({
+        name: "Rajju Porutham", number: 7, pass: rj1 !== rj2, importance: "CRITICAL",
+        meaning: "Marital longevity. Same Rajju is considered highly inauspicious.",
+        workings: { steps: [`Boy Rajju: ${rj1}`, `Girl Rajju: ${rj2}`], inference: (rj1 !== rj2) ? "PASS" : "FAIL" }
+    });
 
     // 8. Vedha
-    poruthams.push({name: "Vedha Porutham", pass: !_vedha_pair(p1_nak, p2_nak)});
+    const vpass = !_vedha_pair(p1_nak, p2_nak);
+    poruthams.push({
+        name: "Vedha Porutham", number: 8, pass: vpass, importance: "CRITICAL",
+        meaning: "Obstacles and affliction. Certain star pairs afflict each other.",
+        workings: { steps: [`Vedha check for stars ${p1_nak} and ${p2_nak}`], inference: vpass ? "PASS" : "FAIL" }
+    });
 
     // 9. Vasiya
-    const [vpass, vreason] = _vasiya_pass(p1_rashi, p2_rashi);
-    poruthams.push({name: "Vasiya Porutham", pass: vpass});
+    const [vpass2, vreason] = _vasiya_pass(p1_rashi, p2_rashi);
+    poruthams.push({
+        name: "Vasiya Porutham", number: 9, pass: vpass2, importance: "MEDIUM",
+        meaning: "Mutual attraction and affection between the couple.",
+        workings: { steps: [vreason], inference: vpass2 ? "PASS" : "FAIL" }
+    });
 
     // 10. Nadi
     const nd1 = _NADI[p1_nak];
     const nd2 = _NADI[p2_nak];
-    poruthams.push({name: "Nadi Porutham", pass: nd1 !== nd2});
+    poruthams.push({
+        name: "Nadi Porutham", number: 10, pass: nd1 !== nd2, importance: "CRITICAL",
+        meaning: "Health and genetics. Same Nadi indicates health issues.",
+        workings: { steps: [`Boy Nadi: ${nd1}`, `Girl Nadi: ${nd2}`], inference: (nd1 !== nd2) ? "PASS" : "FAIL" }
+    });
 
     return poruthams;
 }

@@ -1251,24 +1251,12 @@ async function autoSave() {
 // ── Download PDF ───────────────────────────────────
 async function saveAndDownload() {
   const bar = document.getElementById('pdf-bar');
-  const status = document.getElementById('save-status');
   if (bar) bar.disabled = true;
   try {
-    if (!savedResultId) {
-      if (!lastResult) return;
-      const body = Object.assign({ result: lastResult }, _formSnapshot);
-      // const res = await fetch('/api/save', {
-      //   method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
-      // });
-      return;
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      savedResultId = data.result_id;
-    }
-    window.open('/api/pdf?id=' + savedResultId + '&lang=' + currentLang, '_blank');
-    if (status) { status.textContent = '✓ PDF downloading…'; status.style.color = 'var(--good)'; }
+    alert("To save this report as a PDF:\n\n1. A Print dialog will open.\n2. Select 'Save as PDF' as the printer destination.\n3. Click Save.\n\n(Because this app now runs completely offline on your device, we use the browser's native PDF engine!)");
+    window.print();
   } catch(e) {
-    if (status) { status.textContent = '⚠ ' + e.message; status.style.color = 'var(--bad)'; }
+    console.error(e);
   } finally {
     if (bar) bar.disabled = false;
   }

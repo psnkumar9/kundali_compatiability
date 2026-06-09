@@ -8,6 +8,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kundali Milan">
 <meta name="description" content="Vedic Kundali Compatibility — Ashtakoot Milan">
+
+<!-- PDF Generation Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="pdf_engine.js"></script>
+
 <link rel="manifest" href="/manifest.json">
 <title>Kundali Milan — Vedic Compatibility</title>
 <style>
@@ -1254,37 +1260,22 @@ function saveAndDownload() {
   btn.innerHTML = 'Generating PDF... Please wait ⌛';
   btn.style.opacity = '0.5';
   
-  // Dynamically load html2pdf
-  if (!window.html2pdf) {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-    script.onload = () => executePdfGeneration(btn, originalText);
-    document.head.appendChild(script);
-  } else {
-    executePdfGeneration(btn, originalText);
+  // Use our new pdfmake engine
+  try {
+    if (typeof generateKundaliPDF === 'function' && lastResult) {
+      generateKundaliPDF(lastResult);
+    } else {
+      alert("Error: PDF Engine not loaded or no calculation result found.");
+    }
+  } catch (e) {
+    console.error("PDF generation failed", e);
+    alert("Error generating PDF. Please try again.");
+  } finally {
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.opacity = '1';
+    }, 1000);
   }
-}
-
-function executePdfGeneration(btn, originalText) {
-  const element = document.getElementById('results-tab');
-  const opt = {
-    margin:       [0.5, 0.5],
-    filename:     'Kundali_Milan_Report.pdf',
-    image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2, useCORS: true },
-    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-  };
-  
-  // Hide the buttons before generating PDF
-  const navBtns = element.querySelectorAll('button');
-  navBtns.forEach(b => b.style.display = 'none');
-  
-  window.html2pdf().set(opt).from(element).save().then(() => {
-    // Restore buttons and original state
-    navBtns.forEach(b => b.style.display = '');
-    btn.innerHTML = originalText;
-    btn.style.opacity = '1';
-  });
 }
 
 // ── Saved History ──────────────────────────────────

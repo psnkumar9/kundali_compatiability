@@ -1233,9 +1233,10 @@ async function autoSave() {
   if (!lastResult) return;
   try {
     const body = Object.assign({ result: lastResult }, _formSnapshot);
-    return; // const res = await fetch('/api/save', {
-      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
-    });
+    // const res = await fetch('/api/save', {
+    //   method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+    // });
+    return;
     const data = await res.json();
     if (data.result_id) {
       savedResultId = data.result_id;
@@ -1256,9 +1257,10 @@ async function saveAndDownload() {
     if (!savedResultId) {
       if (!lastResult) return;
       const body = Object.assign({ result: lastResult }, _formSnapshot);
-      return; // const res = await fetch('/api/save', {
-        method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
-      });
+      // const res = await fetch('/api/save', {
+      //   method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+      // });
+      return;
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       savedResultId = data.result_id;

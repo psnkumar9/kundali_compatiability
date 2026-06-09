@@ -1249,7 +1249,42 @@ async function autoSave() {
 
 // ── Download PDF ───────────────────────────────────
 function saveAndDownload() {
-  window.print();
+  const btn = document.getElementById('pdf-bar');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = 'Generating PDF... Please wait ⌛';
+  btn.style.opacity = '0.5';
+  
+  // Dynamically load html2pdf
+  if (!window.html2pdf) {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+    script.onload = () => executePdfGeneration(btn, originalText);
+    document.head.appendChild(script);
+  } else {
+    executePdfGeneration(btn, originalText);
+  }
+}
+
+function executePdfGeneration(btn, originalText) {
+  const element = document.getElementById('results-tab');
+  const opt = {
+    margin:       [0.5, 0.5],
+    filename:     'Kundali_Milan_Report.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+  
+  // Hide the buttons before generating PDF
+  const navBtns = element.querySelectorAll('button');
+  navBtns.forEach(b => b.style.display = 'none');
+  
+  window.html2pdf().set(opt).from(element).save().then(() => {
+    // Restore buttons and original state
+    navBtns.forEach(b => b.style.display = '');
+    btn.innerHTML = originalText;
+    btn.style.opacity = '1';
+  });
 }
 
 // ── Saved History ──────────────────────────────────

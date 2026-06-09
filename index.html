@@ -1621,7 +1621,13 @@ function escHtml(s) {
 applyStoredLanguage();
 loadGuruPhotos();
 loadSavedHistory();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) {
+      registration.unregister();
+    }
+  });
+}
 </script>
 </body>
 </html>

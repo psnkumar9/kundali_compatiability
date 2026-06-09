@@ -1249,17 +1249,8 @@ async function autoSave() {
 }
 
 // ── Download PDF ───────────────────────────────────
-async function saveAndDownload() {
-  const bar = document.getElementById('pdf-bar');
-  if (bar) bar.disabled = true;
-  try {
-    alert("To save this report as a PDF:\n\n1. A Print dialog will open.\n2. Select 'Save as PDF' as the printer destination.\n3. Click Save.\n\n(Because this app now runs completely offline on your device, we use the browser's native PDF engine!)");
-    window.print();
-  } catch(e) {
-    console.error(e);
-  } finally {
-    if (bar) bar.disabled = false;
-  }
+function saveAndDownload() {
+  window.print();
 }
 
 // ── Saved History ──────────────────────────────────

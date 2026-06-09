@@ -1,4 +1,4 @@
-const CACHE = 'kundali-milan-v2';
+const CACHE = 'kundali-milan-v3';
 const STATIC = ['/', '/index.html', '/compatibility_logic.js', '/manifest.json'];
 
 self.addEventListener('install', e => {

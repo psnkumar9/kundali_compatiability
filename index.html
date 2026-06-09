@@ -422,7 +422,6 @@ input[type="file"] {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: opacity 0.2s;
 }
-#pdf-bar:disabled { opacity: 0.5; cursor: wait; }
 
 /* ── Workings tab ── */
 .work-section { margin-bottom: 18px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
@@ -700,7 +699,7 @@ input[type="file"] {
           onclick="switchTab('form')">← <span data-i18n="recalculate">Recalculate</span></button>
 
   <!-- Sticky PDF download bar -->
-  <button id="pdf-bar" onclick="saveAndDownload()" disabled>
+  <button id="pdf-bar" onclick="saveAndDownload()">
     🖨️ <span data-i18n="download_pdf">Print to PDF</span>
   </button>
   <div class="save-status" id="save-status" style="text-align:center;margin-bottom:8px"></div>

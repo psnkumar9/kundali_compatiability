@@ -522,6 +522,13 @@ input[type="file"] {
   .city-dropdown, .history-dropdown { max-height: 160px; }
 }
 
+.coords-display {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 6px;
+  padding-left: 4px;
+}
+
 @media (max-width: 360px) {
   /* Ultra-narrow: emoji only in tabs */
   .tab-btn { font-size: 0.6rem; letter-spacing: 0; }
@@ -614,6 +621,7 @@ input[type="file"] {
         <input type="hidden" id="p1_lon" value="78.4867">
         <input type="hidden" id="p1_tz"  value="5.5">
         <input type="hidden" id="p1_place" value="Hyderabad,IN">
+        <div id="p1_coords_display" class="coords-display">Lat: 17.39, Lon: 78.49 (TZ: UTC+05:30)</div>
       </div>
     </div>
   </div>
@@ -655,6 +663,7 @@ input[type="file"] {
         <input type="hidden" id="p2_lon" value="80.2707">
         <input type="hidden" id="p2_tz"  value="5.5">
         <input type="hidden" id="p2_place" value="Chennai,IN">
+        <div id="p2_coords_display" class="coords-display">Lat: 13.08, Lon: 80.27 (TZ: UTC+05:30)</div>
       </div>
     </div>
   </div>
@@ -995,6 +1004,8 @@ function selectCity(prefix, c) {
   document.getElementById(prefix + '_lon').value   = lon;
   document.getElementById(prefix + '_tz').value    = tz;
   document.getElementById(prefix + '_place').value = name;
+  const disp = document.getElementById(prefix + '_coords_display');
+  if(disp) disp.textContent = `Lat: ${Number(lat).toFixed(2)}, Lon: ${Number(lon).toFixed(2)} (TZ: UTC${formatTZ(tz)})`;
   document.getElementById(prefix + '_city_dropdown').classList.remove('open');
 }
 
@@ -1055,6 +1066,8 @@ function loadFromHistory(prefix, p) {
   if (p.place) {
     document.getElementById(prefix + '_place').value = p.place;
     document.getElementById(prefix + '_city_input').value = p.place;
+    const disp = document.getElementById(prefix + '_coords_display');
+    if(disp) disp.textContent = `Lat: ${Number(p.lat).toFixed(2)}, Lon: ${Number(p.lon).toFixed(2)} (TZ: UTC${formatTZ(p.tz)})`;
   }
   document.getElementById(prefix + '_history_dropdown').classList.remove('open');
   document.getElementById(prefix + '_history_input').value = '';

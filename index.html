@@ -1032,13 +1032,12 @@ let historyTimer = {};
 async function searchHistory(prefix) {
   const input = document.getElementById(prefix + '_history_input');
   const dropdown = document.getElementById(prefix + '_history_dropdown');
-  const q = input.value.trim();
+  const q = input.value.trim().toLowerCase();
   clearTimeout(historyTimer[prefix]);
   historyTimer[prefix] = setTimeout(async () => {
     try {
-      const url = '/api/persons' + (q.length >= 1 ? '?q=' + encodeURIComponent(q) : '');
-      const res = await fetch(url);
-      const persons = await res.json();
+      const allPersons = JSON.parse(localStorage.getItem('kundaliPersons') || '[]');
+      const persons = allPersons.filter(p => !q || (p.name && p.name.toLowerCase().includes(q)));
       renderHistoryDropdown(prefix, persons, dropdown);
     } catch(e) { dropdown.classList.remove('open'); }
   }, 200);
@@ -1251,18 +1250,43 @@ async function autoSave() {
   if (!lastResult) return;
   try {
     const body = Object.assign({ result: lastResult }, _formSnapshot);
-    // const res = await fetch('/api/save', {
-    //   method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
-    // });
-    return;
-    const data = await res.json();
-    if (data.result_id) {
-      savedResultId = data.result_id;
-      const bar = document.getElementById('pdf-bar');
-      if (bar) bar.disabled = false;
-      const st = document.getElementById('save-status');
-      if (st) { st.textContent = tr('auto_saved'); st.style.color = 'var(--good)'; }
-    }
+    
+    const history = JSON.parse(localStorage.getItem('kundaliHistory') || '[]');
+    const newRecord = {
+      id: Date.now(),
+      created: new Date().toISOString().replace('T', ' ').substring(0,19),
+      p1_name: body.p1_name,
+      p2_name: body.p2_name,
+      p1_nakshatra: body.result.p1.nakshatra,
+      p2_nakshatra: body.result.p2.nakshatra,
+      method: body.method,
+      score: body.result.poruthams_passed !== undefined ? `${body.result.poruthams_passed}/10` : `${body.result.total_score}/36`,
+      label: body.result.label,
+      snapshot: body
+    };
+    history.unshift(newRecord);
+    if (history.length > 50) history.length = 50;
+    localStorage.setItem('kundaliHistory', JSON.stringify(history));
+
+    const persons = JSON.parse(localStorage.getItem('kundaliPersons') || '[]');
+    const p1 = { id: Date.now() + 1, name: body.p1_name, dob: body.p1_dob, tob: body.p1_tob, lat: body.p1_lat, lon: body.p1_lon, tz: body.p1_tz, place: body.p1_place, nakshatra: body.result.p1.nakshatra, rashi: body.result.p1.rashi };
+    const p2 = { id: Date.now() + 2, name: body.p2_name, dob: body.p2_dob, tob: body.p2_tob, lat: body.p2_lat, lon: body.p2_lon, tz: body.p2_tz, place: body.p2_place, nakshatra: body.result.p2.nakshatra, rashi: body.result.p2.rashi };
+    
+    const p1idx = persons.findIndex(p => p.name === p1.name);
+    if (p1idx >= 0) persons.splice(p1idx, 1);
+    const p2idx = persons.findIndex(p => p.name === p2.name);
+    if (p2idx >= 0) persons.splice(p2idx, 1);
+    
+    persons.unshift(p1);
+    if (p1.name !== p2.name) persons.unshift(p2);
+    
+    localStorage.setItem('kundaliPersons', JSON.stringify(persons));
+
+    savedResultId = newRecord.id;
+    const bar = document.getElementById('pdf-bar');
+    if (bar) bar.disabled = false;
+    const st = document.getElementById('save-status');
+    if (st) { st.textContent = tr('auto_saved'); st.style.color = 'var(--good)'; }
   } catch(e) { /* silent */ }
 }
 
@@ -1297,7 +1321,7 @@ async function loadSavedHistory() {
   if (!el) return;
   el.innerHTML = '<p style="font-size:0.8rem;color:var(--muted)">Loading…</p>';
   try {
-    const rows = [];
+    const rows = JSON.parse(localStorage.getItem('kundaliHistory') || '[]');
     if (!rows.length) {
       el.innerHTML = '<p style="font-size:0.8rem;color:var(--muted)">No saved records yet. Calculate a compatibility to save one.</p>';
       return;
@@ -1312,21 +1336,38 @@ async function loadSavedHistory() {
           </div>
           <div class="hist-date">${(r.created||'').substring(0,16)}</div>
         </div>
-        <button class="hist-btn recall" onclick="recallToForm(${r.p1_id},${r.p2_id})">🔄 Recall</button>
-        <button class="hist-btn pdf"    onclick="window.open('/api/pdf?id=${r.id}&lang='+currentLang,'_blank')">📥 PDF</button>
+        <button class="hist-btn recall" onclick="recallToForm(${r.id})">🔄 Recall</button>
       </div>`).join('');
   } catch(e) {
     el.innerHTML = '<p style="font-size:0.8rem;color:var(--bad)">Error loading history.</p>';
   }
 }
 
-async function recallToForm(p1Id, p2Id) {
+async function recallToForm(recordId) {
   try {
-    const persons = await fetch('/api/persons').then(r => r.json());
-    const p1 = persons.find(p => p.id === p1Id);
-    const p2 = persons.find(p => p.id === p2Id);
-    if (p1) loadFromHistory('p1', p1);
-    if (p2) loadFromHistory('p2', p2);
+    const history = JSON.parse(localStorage.getItem('kundaliHistory') || '[]');
+    const record = history.find(r => r.id === recordId);
+    if (!record || !record.snapshot) return;
+    
+    const snap = record.snapshot;
+    if (snap.p1_name) document.getElementById('p1_name').value = snap.p1_name;
+    if (snap.p1_dob) document.getElementById('p1_date').value = snap.p1_dob;
+    if (snap.p1_tob) document.getElementById('p1_time').value = snap.p1_tob;
+    if (snap.p1_place) document.getElementById('p1_place').value = snap.p1_place;
+    if (snap.p1_lat) document.getElementById('p1_lat').value = snap.p1_lat;
+    if (snap.p1_lon) document.getElementById('p1_lon').value = snap.p1_lon;
+    if (snap.p1_tz) document.getElementById('p1_tz').value = snap.p1_tz;
+    
+    if (snap.p2_name) document.getElementById('p2_name').value = snap.p2_name;
+    if (snap.p2_dob) document.getElementById('p2_date').value = snap.p2_dob;
+    if (snap.p2_tob) document.getElementById('p2_time').value = snap.p2_tob;
+    if (snap.p2_place) document.getElementById('p2_place').value = snap.p2_place;
+    if (snap.p2_lat) document.getElementById('p2_lat').value = snap.p2_lat;
+    if (snap.p2_lon) document.getElementById('p2_lon').value = snap.p2_lon;
+    if (snap.p2_tz) document.getElementById('p2_tz').value = snap.p2_tz;
+    
+    if (snap.method) document.getElementById('method_select').value = snap.method;
+
     switchTab('form');
   } catch(e) { alert('Could not recall: ' + e.message); }
 }

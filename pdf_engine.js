@@ -165,7 +165,7 @@ function generateKundaliPDF(data) {
       },
       { text: 'Score Summary', style: 'sectionHeader' },
       {
-        text: `${data.total_score} / ${isSouth ? 10 : 36}`,
+        text: `${isSouth ? data.poruthams_passed : data.total_score} / ${isSouth ? 10 : 36}`,
         fontSize: 24,
         bold: true,
         color: '#4a0072',
@@ -200,6 +200,7 @@ function generateKundaliPDF(data) {
         { text: 'Additional Checks (Rajju / Vedha / Mahendra / Sthree Dheerga)', style: 'subHeader', margin: [0, 15, 0, 5] },
         ...buildExtraChecks(data.extra_checks)
       ] : []),
+      ...buildReferenceAppendix(),
       {
         text: "DISCLAIMER: The information provided in this report is based on a preliminary Vedic Ashtakoot Kundali compatibility analysis (Guna Milan) using the Moon's Nakshatra and Pada at the time of birth. This is an initial verification tool and does not constitute a comprehensive astrological opinion. Detailed compatibility assessment requires validating individual horoscopes across multiple chart combinations, planetary positions, dashas, transits, and compensation factors, many of which cannot be fully evaluated by automated digital computation alone. It is strongly recommended that an experienced Jyotishi be consulted for a complete and authoritative evaluation before making any matrimonial or life decisions.",
         fontSize: 8,
@@ -326,4 +327,2431 @@ function buildExtraChecks(checks) {
     });
   });
   return elements;
+}
+
+function buildReferenceAppendix() {
+  return [
+  {
+    "text": "Shastra Reference \u2014 For the Curious Reader",
+    "style": "sectionHeader",
+    "pageBreak": "before"
+  },
+  {
+    "text": "A concise glossary of the classical Vedic terms, groupings, and tables used in the workings above. Understanding these fundamentals helps you verify any result and builds a foundation in Jyotisha Shastra.",
+    "fontSize": 8,
+    "color": "#666",
+    "margin": [
+      0,
+      0,
+      0,
+      10
+    ]
+  },
+  {
+    "text": "1. 12 Rashis (Moon Signs) \u2014 Names, Lords, Elements & Vashya Attraction",
+    "style": "subHeader",
+    "margin": [
+      0,
+      10,
+      0,
+      5
+    ]
+  },
+  {
+    "table": {
+      "headerRows": 1,
+      "body": [
+        [
+          {
+            "text": "#",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Sanskrit",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "English",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Element",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Varna",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Rashi Lord",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Vashya: attracts these signs",
+            "bold": true,
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "1",
+            "fontSize": 8
+          },
+          {
+            "text": "Mesha",
+            "fontSize": 8
+          },
+          {
+            "text": "Aries",
+            "fontSize": 8
+          },
+          {
+            "text": "Fire",
+            "fontSize": 8
+          },
+          {
+            "text": "Kshatriya",
+            "fontSize": 8
+          },
+          {
+            "text": "Mangala (Mars)",
+            "fontSize": 8
+          },
+          {
+            "text": "Leo, Scorpio",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "2",
+            "fontSize": 8
+          },
+          {
+            "text": "Vrishabha",
+            "fontSize": 8
+          },
+          {
+            "text": "Taurus",
+            "fontSize": 8
+          },
+          {
+            "text": "Earth",
+            "fontSize": 8
+          },
+          {
+            "text": "Vaishya",
+            "fontSize": 8
+          },
+          {
+            "text": "Shukra (Venus)",
+            "fontSize": 8
+          },
+          {
+            "text": "Cancer, Libra",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "3",
+            "fontSize": 8
+          },
+          {
+            "text": "Mithuna",
+            "fontSize": 8
+          },
+          {
+            "text": "Gemini",
+            "fontSize": 8
+          },
+          {
+            "text": "Air",
+            "fontSize": 8
+          },
+          {
+            "text": "Shudra",
+            "fontSize": 8
+          },
+          {
+            "text": "Budha (Mercury)",
+            "fontSize": 8
+          },
+          {
+            "text": "Virgo, Aquarius",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "4",
+            "fontSize": 8
+          },
+          {
+            "text": "Karka",
+            "fontSize": 8
+          },
+          {
+            "text": "Cancer",
+            "fontSize": 8
+          },
+          {
+            "text": "Water",
+            "fontSize": 8
+          },
+          {
+            "text": "Brahmin",
+            "fontSize": 8
+          },
+          {
+            "text": "Chandra (Moon)",
+            "fontSize": 8
+          },
+          {
+            "text": "Scorpio, Sagittarius",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "5",
+            "fontSize": 8
+          },
+          {
+            "text": "Simha",
+            "fontSize": 8
+          },
+          {
+            "text": "Leo",
+            "fontSize": 8
+          },
+          {
+            "text": "Fire",
+            "fontSize": 8
+          },
+          {
+            "text": "Kshatriya",
+            "fontSize": 8
+          },
+          {
+            "text": "Surya (Sun)",
+            "fontSize": 8
+          },
+          {
+            "text": "Libra",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "6",
+            "fontSize": 8
+          },
+          {
+            "text": "Kanya",
+            "fontSize": 8
+          },
+          {
+            "text": "Virgo",
+            "fontSize": 8
+          },
+          {
+            "text": "Earth",
+            "fontSize": 8
+          },
+          {
+            "text": "Vaishya",
+            "fontSize": 8
+          },
+          {
+            "text": "Budha (Mercury)",
+            "fontSize": 8
+          },
+          {
+            "text": "Pisces, Gemini",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "7",
+            "fontSize": 8
+          },
+          {
+            "text": "Tula",
+            "fontSize": 8
+          },
+          {
+            "text": "Libra",
+            "fontSize": 8
+          },
+          {
+            "text": "Air",
+            "fontSize": 8
+          },
+          {
+            "text": "Shudra",
+            "fontSize": 8
+          },
+          {
+            "text": "Shukra (Venus)",
+            "fontSize": 8
+          },
+          {
+            "text": "Capricorn, Virgo",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "8",
+            "fontSize": 8
+          },
+          {
+            "text": "Vrishchika",
+            "fontSize": 8
+          },
+          {
+            "text": "Scorpio",
+            "fontSize": 8
+          },
+          {
+            "text": "Water",
+            "fontSize": 8
+          },
+          {
+            "text": "Brahmin",
+            "fontSize": 8
+          },
+          {
+            "text": "Mangala (Mars)",
+            "fontSize": 8
+          },
+          {
+            "text": "Cancer, Leo",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "9",
+            "fontSize": 8
+          },
+          {
+            "text": "Dhanu",
+            "fontSize": 8
+          },
+          {
+            "text": "Sagittarius",
+            "fontSize": 8
+          },
+          {
+            "text": "Fire",
+            "fontSize": 8
+          },
+          {
+            "text": "Kshatriya",
+            "fontSize": 8
+          },
+          {
+            "text": "Guru (Jupiter)",
+            "fontSize": 8
+          },
+          {
+            "text": "Pisces, Aquarius",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "10",
+            "fontSize": 8
+          },
+          {
+            "text": "Makara",
+            "fontSize": 8
+          },
+          {
+            "text": "Capricorn",
+            "fontSize": 8
+          },
+          {
+            "text": "Earth",
+            "fontSize": 8
+          },
+          {
+            "text": "Vaishya",
+            "fontSize": 8
+          },
+          {
+            "text": "Shani (Saturn)",
+            "fontSize": 8
+          },
+          {
+            "text": "Aries, Aquarius",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "11",
+            "fontSize": 8
+          },
+          {
+            "text": "Kumbha",
+            "fontSize": 8
+          },
+          {
+            "text": "Aquarius",
+            "fontSize": 8
+          },
+          {
+            "text": "Air",
+            "fontSize": 8
+          },
+          {
+            "text": "Shudra",
+            "fontSize": 8
+          },
+          {
+            "text": "Shani (Saturn)",
+            "fontSize": 8
+          },
+          {
+            "text": "Aries, Pisces",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "12",
+            "fontSize": 8
+          },
+          {
+            "text": "Meena",
+            "fontSize": 8
+          },
+          {
+            "text": "Pisces",
+            "fontSize": 8
+          },
+          {
+            "text": "Water",
+            "fontSize": 8
+          },
+          {
+            "text": "Brahmin",
+            "fontSize": 8
+          },
+          {
+            "text": "Guru (Jupiter)",
+            "fontSize": 8
+          },
+          {
+            "text": "Capricorn, Gemini",
+            "fontSize": 8
+          }
+        ]
+      ],
+      "widths": [
+        "auto",
+        "auto",
+        "auto",
+        "auto",
+        "auto",
+        "auto",
+        "auto"
+      ]
+    },
+    "layout": "lightHorizontalLines",
+    "margin": [
+      0,
+      0,
+      0,
+      5
+    ]
+  },
+  {
+    "text": "Vashya (dominance/attraction): Each rashi has a natural attraction over specific other rashis per Parashar. Girl's rashi in boy's list = 2 pts; boy's rashi in girl's list = 1 pt; neither = 0 pts.",
+    "fontSize": 8,
+    "color": "#666",
+    "italics": true,
+    "margin": [
+      0,
+      0,
+      0,
+      10
+    ]
+  },
+  {
+    "text": "2. 27 Nakshatras (Birth Stars) \u2014 Rashi, Lord, Gana, Nadi, Yoni",
+    "style": "subHeader",
+    "margin": [
+      0,
+      10,
+      0,
+      5
+    ]
+  },
+  {
+    "table": {
+      "headerRows": 1,
+      "body": [
+        [
+          {
+            "text": "#",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Nakshatra",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Telugu/Alt",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Rashi",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Lord",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Gana",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Nadi",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Yoni Animal",
+            "bold": true,
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "1",
+            "fontSize": 8
+          },
+          {
+            "text": "Ashwini",
+            "fontSize": 8
+          },
+          {
+            "text": "Aswini",
+            "fontSize": 8
+          },
+          {
+            "text": "Mesha (Aries)",
+            "fontSize": 8
+          },
+          {
+            "text": "Ketu",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva",
+            "fontSize": 8
+          },
+          {
+            "text": "Adi",
+            "fontSize": 8
+          },
+          {
+            "text": "Ashwa (Horse)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "2",
+            "fontSize": 8
+          },
+          {
+            "text": "Bharani",
+            "fontSize": 8
+          },
+          {
+            "text": "Bharani",
+            "fontSize": 8
+          },
+          {
+            "text": "Mesha (Aries)",
+            "fontSize": 8
+          },
+          {
+            "text": "Shukra",
+            "fontSize": 8
+          },
+          {
+            "text": "Manushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Madhya",
+            "fontSize": 8
+          },
+          {
+            "text": "Gaja (Elephant)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "3",
+            "fontSize": 8
+          },
+          {
+            "text": "Krittika",
+            "fontSize": 8
+          },
+          {
+            "text": "Krithika",
+            "fontSize": 8
+          },
+          {
+            "text": "Mesha (Aries) p1 / Vrishabha p2-4",
+            "fontSize": 8
+          },
+          {
+            "text": "Surya",
+            "fontSize": 8
+          },
+          {
+            "text": "Rakshasa",
+            "fontSize": 8
+          },
+          {
+            "text": "Antya",
+            "fontSize": 8
+          },
+          {
+            "text": "Mesha (Goat)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "4",
+            "fontSize": 8
+          },
+          {
+            "text": "Rohini",
+            "fontSize": 8
+          },
+          {
+            "text": "Rohini",
+            "fontSize": 8
+          },
+          {
+            "text": "Vrishabha (Taurus)",
+            "fontSize": 8
+          },
+          {
+            "text": "Chandra",
+            "fontSize": 8
+          },
+          {
+            "text": "Manushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Antya",
+            "fontSize": 8
+          },
+          {
+            "text": "Sarpa (Serpent)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "5",
+            "fontSize": 8
+          },
+          {
+            "text": "Mrigashira",
+            "fontSize": 8
+          },
+          {
+            "text": "Mrigasira",
+            "fontSize": 8
+          },
+          {
+            "text": "Mithuna (Gemini) p3-4 / Vrishabha p1-2",
+            "fontSize": 8
+          },
+          {
+            "text": "Mangala",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva",
+            "fontSize": 8
+          },
+          {
+            "text": "Madhya",
+            "fontSize": 8
+          },
+          {
+            "text": "Sarpa (Serpent)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "6",
+            "fontSize": 8
+          },
+          {
+            "text": "Ardra",
+            "fontSize": 8
+          },
+          {
+            "text": "Ardra",
+            "fontSize": 8
+          },
+          {
+            "text": "Mithuna (Gemini)",
+            "fontSize": 8
+          },
+          {
+            "text": "Rahu",
+            "fontSize": 8
+          },
+          {
+            "text": "Manushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Adi",
+            "fontSize": 8
+          },
+          {
+            "text": "Shwana (Dog)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "7",
+            "fontSize": 8
+          },
+          {
+            "text": "Punarvasu",
+            "fontSize": 8
+          },
+          {
+            "text": "Punarvasu",
+            "fontSize": 8
+          },
+          {
+            "text": "Mithuna (Gemini) p1-3 / Karka p4",
+            "fontSize": 8
+          },
+          {
+            "text": "Guru",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva",
+            "fontSize": 8
+          },
+          {
+            "text": "Adi",
+            "fontSize": 8
+          },
+          {
+            "text": "Marjara (Cat)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "8",
+            "fontSize": 8
+          },
+          {
+            "text": "Pushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Pushyami",
+            "fontSize": 8
+          },
+          {
+            "text": "Karka (Cancer)",
+            "fontSize": 8
+          },
+          {
+            "text": "Shani",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva",
+            "fontSize": 8
+          },
+          {
+            "text": "Madhya",
+            "fontSize": 8
+          },
+          {
+            "text": "Mesha (Goat)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "9",
+            "fontSize": 8
+          },
+          {
+            "text": "Ashlesha",
+            "fontSize": 8
+          },
+          {
+            "text": "Aslesha",
+            "fontSize": 8
+          },
+          {
+            "text": "Karka (Cancer)",
+            "fontSize": 8
+          },
+          {
+            "text": "Budha",
+            "fontSize": 8
+          },
+          {
+            "text": "Rakshasa",
+            "fontSize": 8
+          },
+          {
+            "text": "Antya",
+            "fontSize": 8
+          },
+          {
+            "text": "Marjara (Cat)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "10",
+            "fontSize": 8
+          },
+          {
+            "text": "Magha",
+            "fontSize": 8
+          },
+          {
+            "text": "Makha",
+            "fontSize": 8
+          },
+          {
+            "text": "Simha (Leo)",
+            "fontSize": 8
+          },
+          {
+            "text": "Ketu",
+            "fontSize": 8
+          },
+          {
+            "text": "Rakshasa",
+            "fontSize": 8
+          },
+          {
+            "text": "Antya",
+            "fontSize": 8
+          },
+          {
+            "text": "Mushika (Rat)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "11",
+            "fontSize": 8
+          },
+          {
+            "text": "Purva Phalguni",
+            "fontSize": 8
+          },
+          {
+            "text": "Pubba",
+            "fontSize": 8
+          },
+          {
+            "text": "Simha (Leo)",
+            "fontSize": 8
+          },
+          {
+            "text": "Shukra",
+            "fontSize": 8
+          },
+          {
+            "text": "Manushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Madhya",
+            "fontSize": 8
+          },
+          {
+            "text": "Mushika (Rat)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "12",
+            "fontSize": 8
+          },
+          {
+            "text": "Uttara Phalguni",
+            "fontSize": 8
+          },
+          {
+            "text": "Uttara",
+            "fontSize": 8
+          },
+          {
+            "text": "Simha (Leo) p1 / Kanya p2-4",
+            "fontSize": 8
+          },
+          {
+            "text": "Surya",
+            "fontSize": 8
+          },
+          {
+            "text": "Manushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Adi",
+            "fontSize": 8
+          },
+          {
+            "text": "Gau (Cow)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "13",
+            "fontSize": 8
+          },
+          {
+            "text": "Hasta",
+            "fontSize": 8
+          },
+          {
+            "text": "Hasta",
+            "fontSize": 8
+          },
+          {
+            "text": "Kanya (Virgo)",
+            "fontSize": 8
+          },
+          {
+            "text": "Chandra",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva",
+            "fontSize": 8
+          },
+          {
+            "text": "Adi",
+            "fontSize": 8
+          },
+          {
+            "text": "Mahisha (Buffalo)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "14",
+            "fontSize": 8
+          },
+          {
+            "text": "Chitra",
+            "fontSize": 8
+          },
+          {
+            "text": "Chitta",
+            "fontSize": 8
+          },
+          {
+            "text": "Kanya (Virgo) p1-2 / Tula p3-4",
+            "fontSize": 8
+          },
+          {
+            "text": "Mangala",
+            "fontSize": 8
+          },
+          {
+            "text": "Rakshasa",
+            "fontSize": 8
+          },
+          {
+            "text": "Madhya",
+            "fontSize": 8
+          },
+          {
+            "text": "Vyaghra (Tiger)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "15",
+            "fontSize": 8
+          },
+          {
+            "text": "Swati",
+            "fontSize": 8
+          },
+          {
+            "text": "Swati",
+            "fontSize": 8
+          },
+          {
+            "text": "Tula (Libra)",
+            "fontSize": 8
+          },
+          {
+            "text": "Rahu",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva",
+            "fontSize": 8
+          },
+          {
+            "text": "Antya",
+            "fontSize": 8
+          },
+          {
+            "text": "Mahisha (Buffalo)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "16",
+            "fontSize": 8
+          },
+          {
+            "text": "Vishakha",
+            "fontSize": 8
+          },
+          {
+            "text": "Visakha",
+            "fontSize": 8
+          },
+          {
+            "text": "Tula (Libra) p1-3 / Vrishchika p4",
+            "fontSize": 8
+          },
+          {
+            "text": "Guru",
+            "fontSize": 8
+          },
+          {
+            "text": "Rakshasa",
+            "fontSize": 8
+          },
+          {
+            "text": "Antya",
+            "fontSize": 8
+          },
+          {
+            "text": "Vyaghra (Tiger)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "17",
+            "fontSize": 8
+          },
+          {
+            "text": "Anuradha",
+            "fontSize": 8
+          },
+          {
+            "text": "Anuradha",
+            "fontSize": 8
+          },
+          {
+            "text": "Vrishchika (Scorpio)",
+            "fontSize": 8
+          },
+          {
+            "text": "Shani",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva",
+            "fontSize": 8
+          },
+          {
+            "text": "Madhya",
+            "fontSize": 8
+          },
+          {
+            "text": "Mriga (Deer)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "18",
+            "fontSize": 8
+          },
+          {
+            "text": "Jyeshtha",
+            "fontSize": 8
+          },
+          {
+            "text": "Jyeshta",
+            "fontSize": 8
+          },
+          {
+            "text": "Vrishchika (Scorpio)",
+            "fontSize": 8
+          },
+          {
+            "text": "Budha",
+            "fontSize": 8
+          },
+          {
+            "text": "Rakshasa",
+            "fontSize": 8
+          },
+          {
+            "text": "Adi",
+            "fontSize": 8
+          },
+          {
+            "text": "Mriga (Deer)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "19",
+            "fontSize": 8
+          },
+          {
+            "text": "Mula",
+            "fontSize": 8
+          },
+          {
+            "text": "Moola",
+            "fontSize": 8
+          },
+          {
+            "text": "Dhanu (Sagittarius)",
+            "fontSize": 8
+          },
+          {
+            "text": "Ketu",
+            "fontSize": 8
+          },
+          {
+            "text": "Rakshasa",
+            "fontSize": 8
+          },
+          {
+            "text": "Antya",
+            "fontSize": 8
+          },
+          {
+            "text": "Shwana (Dog)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "20",
+            "fontSize": 8
+          },
+          {
+            "text": "Purva Ashadha",
+            "fontSize": 8
+          },
+          {
+            "text": "Poorvashada",
+            "fontSize": 8
+          },
+          {
+            "text": "Dhanu (Sagittarius)",
+            "fontSize": 8
+          },
+          {
+            "text": "Shukra",
+            "fontSize": 8
+          },
+          {
+            "text": "Manushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Madhya",
+            "fontSize": 8
+          },
+          {
+            "text": "Vanara (Monkey)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "21",
+            "fontSize": 8
+          },
+          {
+            "text": "Uttara Ashadha",
+            "fontSize": 8
+          },
+          {
+            "text": "Uttarashada",
+            "fontSize": 8
+          },
+          {
+            "text": "Dhanu (Sagittarius) p1 / Makara p2-4",
+            "fontSize": 8
+          },
+          {
+            "text": "Surya",
+            "fontSize": 8
+          },
+          {
+            "text": "Manushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Adi",
+            "fontSize": 8
+          },
+          {
+            "text": "Nakula (Mongoose)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "22",
+            "fontSize": 8
+          },
+          {
+            "text": "Shravana",
+            "fontSize": 8
+          },
+          {
+            "text": "Sravana",
+            "fontSize": 8
+          },
+          {
+            "text": "Makara (Capricorn)",
+            "fontSize": 8
+          },
+          {
+            "text": "Chandra",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva",
+            "fontSize": 8
+          },
+          {
+            "text": "Adi",
+            "fontSize": 8
+          },
+          {
+            "text": "Vanar (Monkey)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "23",
+            "fontSize": 8
+          },
+          {
+            "text": "Dhanishtha",
+            "fontSize": 8
+          },
+          {
+            "text": "Dhanishta",
+            "fontSize": 8
+          },
+          {
+            "text": "Makara (Capricorn) p1-2 / Kumbha p3-4",
+            "fontSize": 8
+          },
+          {
+            "text": "Mangala",
+            "fontSize": 8
+          },
+          {
+            "text": "Rakshasa",
+            "fontSize": 8
+          },
+          {
+            "text": "Madhya",
+            "fontSize": 8
+          },
+          {
+            "text": "Simha (Lion)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "24",
+            "fontSize": 8
+          },
+          {
+            "text": "Shatabhisha",
+            "fontSize": 8
+          },
+          {
+            "text": "Satabhisha",
+            "fontSize": 8
+          },
+          {
+            "text": "Kumbha (Aquarius)",
+            "fontSize": 8
+          },
+          {
+            "text": "Rahu",
+            "fontSize": 8
+          },
+          {
+            "text": "Rakshasa",
+            "fontSize": 8
+          },
+          {
+            "text": "Antya",
+            "fontSize": 8
+          },
+          {
+            "text": "Ashwa (Horse)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "25",
+            "fontSize": 8
+          },
+          {
+            "text": "Purva Bhadra",
+            "fontSize": 8
+          },
+          {
+            "text": "Poorvabhadra",
+            "fontSize": 8
+          },
+          {
+            "text": "Kumbha (Aquarius) p1-3 / Meena p4",
+            "fontSize": 8
+          },
+          {
+            "text": "Guru",
+            "fontSize": 8
+          },
+          {
+            "text": "Manushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Adi",
+            "fontSize": 8
+          },
+          {
+            "text": "Simha (Lion)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "26",
+            "fontSize": 8
+          },
+          {
+            "text": "Uttara Bhadra",
+            "fontSize": 8
+          },
+          {
+            "text": "Uttarabhadra",
+            "fontSize": 8
+          },
+          {
+            "text": "Meena (Pisces)",
+            "fontSize": 8
+          },
+          {
+            "text": "Shani",
+            "fontSize": 8
+          },
+          {
+            "text": "Manushya",
+            "fontSize": 8
+          },
+          {
+            "text": "Madhya",
+            "fontSize": 8
+          },
+          {
+            "text": "Gau (Cow)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "27",
+            "fontSize": 8
+          },
+          {
+            "text": "Revati",
+            "fontSize": 8
+          },
+          {
+            "text": "Revati",
+            "fontSize": 8
+          },
+          {
+            "text": "Meena (Pisces)",
+            "fontSize": 8
+          },
+          {
+            "text": "Budha",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva",
+            "fontSize": 8
+          },
+          {
+            "text": "Antya",
+            "fontSize": 8
+          },
+          {
+            "text": "Gaja (Elephant)",
+            "fontSize": 8
+          }
+        ]
+      ],
+      "widths": [
+        "auto",
+        "auto",
+        "auto",
+        "auto",
+        "auto",
+        "auto",
+        "auto",
+        "auto"
+      ]
+    },
+    "layout": "lightHorizontalLines",
+    "margin": [
+      0,
+      0,
+      0,
+      5
+    ]
+  },
+  {
+    "text": "Pada (quarter): Each Nakshatra spans 13\u00b020' and is divided into 4 padas (quarters) of 3\u00b020' each. Stars spanning two rashis (e.g. Krittika, Mrigashira) have their padas split across both rashis.",
+    "fontSize": 8,
+    "color": "#666",
+    "italics": true,
+    "margin": [
+      0,
+      0,
+      0,
+      10
+    ]
+  },
+  {
+    "text": "3. Gana (Temperament) Groups",
+    "style": "subHeader",
+    "margin": [
+      0,
+      10,
+      0,
+      5
+    ]
+  },
+  {
+    "table": {
+      "widths": [
+        "30%",
+        "70%"
+      ],
+      "body": [
+        [
+          {
+            "text": "Deva (Divine)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Ashwini(1), Mrigashira(5), Punarvasu(7), Pushya(8), Hasta(13), Swati(15), Anuradha(17), Shravana(22), Revati(27)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Manushya (Human)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Bharani(2), Rohini(4), Ardra(6), Purva Phalguni(11), Uttara Phalguni(12), Purva Ashadha(20), Uttara Ashadha(21), Purva Bhadra(25), Uttara Bhadra(26)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Rakshasa (Fierce)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Krittika(3), Ashlesha(9), Magha(10), Chitra(14), Vishakha(16), Jyeshtha(18), Mula(19), Dhanishtha(23), Shatabhisha(24)",
+            "fontSize": 8
+          }
+        ]
+      ]
+    },
+    "layout": "lightHorizontalLines",
+    "margin": [
+      0,
+      0,
+      0,
+      5
+    ]
+  },
+  {
+    "text": "Gana indicates temperament: Deva=divine/gentle, Manushya=human/balanced, Rakshasa=fierce/intense. Scoring (BV Raman): same Gana=6, Deva+Manushya=5, Manushya+Deva=4; Rakshasa+Deva=0, Deva+Rakshasa=1, Rakshasa+Manushya=0, Manushya+Rakshasa=2.",
+    "fontSize": 8,
+    "color": "#666",
+    "italics": true,
+    "margin": [
+      0,
+      0,
+      0,
+      10
+    ]
+  },
+  {
+    "text": "4. Nadi (Physiological Constitution) Groups",
+    "style": "subHeader",
+    "margin": [
+      0,
+      10,
+      0,
+      5
+    ]
+  },
+  {
+    "table": {
+      "widths": [
+        "30%",
+        "70%"
+      ],
+      "body": [
+        [
+          {
+            "text": "Adi (Vata \u2014 Wind)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Ashwini(1), Ardra(6), Punarvasu(7), Uttara Phalguni(12), Hasta(13), Jyeshtha(18), Uttara Ashadha(21), Shravana(22), Purva Bhadra(25)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Madhya (Pitta \u2014 Fire)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Bharani(2), Mrigashira(5), Pushya(8), Purva Phalguni(11), Chitra(14), Anuradha(17), Purva Ashadha(20), Dhanishtha(23), Uttara Bhadra(26)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Antya (Kapha \u2014 Water)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Krittika(3), Rohini(4), Ashlesha(9), Magha(10), Swati(15), Vishakha(16), Mula(19), Shatabhisha(24), Revati(27)",
+            "fontSize": 8
+          }
+        ]
+      ]
+    },
+    "layout": "lightHorizontalLines",
+    "margin": [
+      0,
+      0,
+      0,
+      5
+    ]
+  },
+  {
+    "text": "Nadi refers to the bodily constitution (dosha): Adi=Vata (wind), Madhya=Pitta (fire), Antya=Kapha (water). Same Nadi = Nadi Dosha (0/8 - most severe defect). Different Nadi = 8/8. Exception: if same nakshatra but different rashi, or same rashi but different nakshatra, dosha may be cancelled.",
+    "fontSize": 8,
+    "color": "#666",
+    "italics": true,
+    "margin": [
+      0,
+      0,
+      0,
+      10
+    ]
+  },
+  {
+    "text": "5. Rajju (Body Part) Groups \u2014 Critical in South India",
+    "style": "subHeader",
+    "margin": [
+      0,
+      10,
+      0,
+      5
+    ]
+  },
+  {
+    "table": {
+      "widths": [
+        "30%",
+        "70%"
+      ],
+      "body": [
+        [
+          {
+            "text": "Shira (Head)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Mrigashira(5), Chitra(14), Dhanishtha(23)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Kantha (Neck)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Rohini(4), Ardra(6), Hasta(13), Swati(15), Shravana(22), Shatabhisha(24)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Udara (Stomach)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Krittika(3), Punarvasu(7), Uttara Phalguni(12), Vishakha(16), Uttara Ashadha(21), Purva Bhadra(25)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Kati (Waist)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Bharani(2), Pushya(8), Purva Phalguni(11), Anuradha(17), Purva Ashadha(20), Uttara Bhadra(26)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Pada (Feet)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Ashwini(1), Ashlesha(9), Magha(10), Jyeshtha(18), Mula(19), Revati(27)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Shira\u2013Kantha (shared)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Purva Ashadha(20)* \u2014 some authorities place in Kati",
+            "fontSize": 8
+          }
+        ]
+      ]
+    },
+    "layout": "lightHorizontalLines",
+    "margin": [
+      0,
+      0,
+      0,
+      5
+    ]
+  },
+  {
+    "text": "Rajju is the most critical South India porutham. If both boy's and girl's stars fall in the same Rajju group it indicates danger to the concerned body part of spouse. Rajju Dosha in same group = FAIL (critical). Shira=head (danger to husband), Kantha=neck (both), Udara=stomach (children), Kati=waist (both), Pada=feet (wife).",
+    "fontSize": 8,
+    "color": "#666",
+    "italics": true,
+    "margin": [
+      0,
+      0,
+      0,
+      10
+    ]
+  },
+  {
+    "text": "6. Yoni (Animal Nature) Groups & Enemy Pairs",
+    "style": "subHeader",
+    "margin": [
+      0,
+      10,
+      0,
+      5
+    ]
+  },
+  {
+    "table": {
+      "widths": [
+        "20%",
+        "40%",
+        "20%",
+        "20%"
+      ],
+      "body": [
+        [
+          {
+            "text": "Ashwa (Horse)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Ashwini(1), Shatabhisha(24)",
+            "fontSize": 8
+          },
+          {
+            "text": "Shwana (Dog)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "Mriga (Deer/Hare)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Gaja (Elephant)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Bharani(2), Revati(27)",
+            "fontSize": 8
+          },
+          {
+            "text": "Marjara (Cat)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "Mushika (Rat)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Mesha (Goat/Ram)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Krittika(3), Pushya(8)",
+            "fontSize": 8
+          },
+          {
+            "text": "Ashwa (Horse)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "Mahisha (Buffalo)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Sarpa (Serpent)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Rohini(4), Mrigashira(5)",
+            "fontSize": 8
+          },
+          {
+            "text": "Gaja (Elephant)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "Simha (Lion)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Shwana (Dog)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Ardra(6), Mula(19)",
+            "fontSize": 8
+          },
+          {
+            "text": "Sarpa (Serpent)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "Nakula (Mongoose)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Marjara (Cat)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Punarvasu(7), Ashlesha(9)",
+            "fontSize": 8
+          },
+          {
+            "text": "Mesha (Goat)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "Vanar (Monkey)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Mushika (Rat)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Magha(10), Purva Phalguni(11)",
+            "fontSize": 8
+          },
+          {
+            "text": "Gau (Cow)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "Vyaghra (Tiger)",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Gau (Cow)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Uttara Phalguni(12), Uttara Bhadra(26)",
+            "fontSize": 8
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Mahisha (Buffalo)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Hasta(13), Swati(15)",
+            "fontSize": 8
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Vyaghra (Tiger)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Chitra(14), Vishakha(16)",
+            "fontSize": 8
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Mriga (Deer/Hare)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Anuradha(17), Jyeshtha(18)",
+            "fontSize": 8
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Vanar (Monkey)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Purva Ashadha(20), Shravana(22)",
+            "fontSize": 8
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Nakula (Mongoose)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Uttara Ashadha(21)",
+            "fontSize": 8
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ],
+        [
+          {
+            "text": "Simha (Lion)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Dhanishtha(23), Purva Bhadra(25)",
+            "fontSize": 8
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          },
+          {
+            "text": "",
+            "fontSize": 8,
+            "color": "#b71c1c"
+          }
+        ]
+      ]
+    },
+    "layout": "lightHorizontalLines",
+    "margin": [
+      0,
+      0,
+      0,
+      5
+    ]
+  },
+  {
+    "text": "Yoni indicates animal nature and physical/sexual compatibility. Same yoni = 4 pts; natural enemies (above) = 0 pts; neutral = 2 pts; friendly = 3 pts (per Saravali). Nakula (Mongoose) has no enemy - scores 2 with all except its own kind.",
+    "fontSize": 8,
+    "color": "#666",
+    "italics": true,
+    "margin": [
+      0,
+      0,
+      0,
+      10
+    ]
+  },
+  {
+    "text": "7. Graha Maitri (Planetary Natural Friendships)",
+    "style": "subHeader",
+    "margin": [
+      0,
+      10,
+      0,
+      5
+    ]
+  },
+  {
+    "table": {
+      "headerRows": 1,
+      "body": [
+        [
+          {
+            "text": "Planet",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Natural Friends (Mitra)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Natural Enemies (Shatru)",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Neutral (Sama)",
+            "bold": true,
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Surya (Sun)",
+            "fontSize": 8
+          },
+          {
+            "text": "Moon, Mars, Jupiter",
+            "fontSize": 8
+          },
+          {
+            "text": "Saturn, Venus",
+            "fontSize": 8
+          },
+          {
+            "text": "Mercury",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Chandra (Moon)",
+            "fontSize": 8
+          },
+          {
+            "text": "Sun, Mercury",
+            "fontSize": 8
+          },
+          {
+            "text": "Mars, Jupiter, Venus, Saturn",
+            "fontSize": 8
+          },
+          {
+            "text": "-",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Mangala (Mars)",
+            "fontSize": 8
+          },
+          {
+            "text": "Sun, Moon, Jupiter",
+            "fontSize": 8
+          },
+          {
+            "text": "Saturn, Venus",
+            "fontSize": 8
+          },
+          {
+            "text": "Mercury",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Budha (Mercury)",
+            "fontSize": 8
+          },
+          {
+            "text": "Sun, Venus",
+            "fontSize": 8
+          },
+          {
+            "text": "Mars, Jupiter, Saturn",
+            "fontSize": 8
+          },
+          {
+            "text": "Moon",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Guru (Jupiter)",
+            "fontSize": 8
+          },
+          {
+            "text": "Sun, Moon, Mars",
+            "fontSize": 8
+          },
+          {
+            "text": "Saturn, Venus",
+            "fontSize": 8
+          },
+          {
+            "text": "Mercury",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Shukra (Venus)",
+            "fontSize": 8
+          },
+          {
+            "text": "Mercury, Saturn",
+            "fontSize": 8
+          },
+          {
+            "text": "Mars, Jupiter, Sun",
+            "fontSize": 8
+          },
+          {
+            "text": "Moon",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Shani (Saturn)",
+            "fontSize": 8
+          },
+          {
+            "text": "Mercury, Venus",
+            "fontSize": 8
+          },
+          {
+            "text": "Sun, Moon, Mars",
+            "fontSize": 8
+          },
+          {
+            "text": "Jupiter",
+            "fontSize": 8
+          }
+        ]
+      ],
+      "widths": [
+        "auto",
+        "auto",
+        "auto",
+        "auto"
+      ]
+    },
+    "layout": "lightHorizontalLines",
+    "margin": [
+      0,
+      0,
+      0,
+      5
+    ]
+  },
+  {
+    "text": "Graha Maitri (Rashi Lord friendship) score: Friend+Friend=5, Friend+Neutral=4, Neutral+Neutral=3, Friend+Enemy=1, Neutral+Enemy=0.5, Enemy+Enemy=0. The lords of boy's and girl's Moon signs are checked from this table.",
+    "fontSize": 8,
+    "color": "#666",
+    "italics": true,
+    "margin": [
+      0,
+      0,
+      0,
+      10
+    ]
+  },
+  {
+    "text": "8. Quick Scoring Reference \u2014 Ashtakoota (North India)",
+    "style": "subHeader",
+    "margin": [
+      0,
+      10,
+      0,
+      5
+    ]
+  },
+  {
+    "table": {
+      "headerRows": 1,
+      "body": [
+        [
+          {
+            "text": "Koot",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Max",
+            "bold": true,
+            "fontSize": 8
+          },
+          {
+            "text": "Classical Rule / Scoring Logic",
+            "bold": true,
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Varna",
+            "fontSize": 8
+          },
+          {
+            "text": "1",
+            "fontSize": 8
+          },
+          {
+            "text": "Boy's Varna >= Girl's Varna in hierarchy (Brahmin > Kshatriya > Vaishya > Shudra)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Vashya",
+            "fontSize": 8
+          },
+          {
+            "text": "2",
+            "fontSize": 8
+          },
+          {
+            "text": "Girl's rashi in boy's Vashya list=2; boy's in girl's=1; neither=0",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Tara / Dina",
+            "fontSize": 8
+          },
+          {
+            "text": "3",
+            "fontSize": 8
+          },
+          {
+            "text": "Count girl->boy stars divided by 9; positions 3(Vipat),5(Pratyari),7(Vadha) = inauspicious",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Yoni",
+            "fontSize": 8
+          },
+          {
+            "text": "4",
+            "fontSize": 8
+          },
+          {
+            "text": "Same yoni=4; neutral=2; friendly=3; enemy yoni pair=0",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Graha Maitri",
+            "fontSize": 8
+          },
+          {
+            "text": "5",
+            "fontSize": 8
+          },
+          {
+            "text": "Planetary lords of Moon signs - friendship table above",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Gana",
+            "fontSize": 8
+          },
+          {
+            "text": "6",
+            "fontSize": 8
+          },
+          {
+            "text": "Deva+Deva=6; Deva+Manushya=5; others as shown in Gana note above",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Bhakoot",
+            "fontSize": 8
+          },
+          {
+            "text": "7",
+            "fontSize": 8
+          },
+          {
+            "text": "Moon sign relationship: 6-8 / 9-5 / 12-2 patterns = 0 (Bhakoot Dosha); else 7",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "Nadi",
+            "fontSize": 8
+          },
+          {
+            "text": "8",
+            "fontSize": 8
+          },
+          {
+            "text": "Different Nadi = 8 (best); same Nadi = 0 (Nadi Dosha - most critical)",
+            "fontSize": 8
+          }
+        ],
+        [
+          {
+            "text": "TOTAL",
+            "fontSize": 8
+          },
+          {
+            "text": "36",
+            "fontSize": 8
+          },
+          {
+            "text": "18+ = minimum acceptable; 24+ = good; 28+ = highly auspicious",
+            "fontSize": 8
+          }
+        ]
+      ],
+      "widths": [
+        "auto",
+        "auto",
+        "auto"
+      ]
+    },
+    "layout": "lightHorizontalLines",
+    "margin": [
+      0,
+      0,
+      0,
+      5
+    ]
+  },
+  {
+    "text": "Sources: Brihat Parashara Hora Shastra (BPHS), Muhurta Chintamani, Jataka Parijata, Saravali, BV Raman's 'Muhurtha'. South India Dashakoot follows Dina, Gana, Mahendra, Stree Dheerga, Yoni, Rasi, Rasyadhipathi, Vasiya, Rajju, Nadi (10 poruthams; 6+ required, Rajju & Nadi critical). This reference is provided for educational purposes. Consult a qualified Jyotishi for authoritative guidance.",
+    "fontSize": 8,
+    "color": "#666",
+    "italics": true,
+    "margin": [
+      0,
+      0,
+      0,
+      10
+    ]
+  }
+];
 }

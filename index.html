@@ -1113,16 +1113,22 @@ async function calculate() {
 
   // snapshot form values for save
   _formSnapshot = {
+    p1_name: document.getElementById('p1_name').value || 'Person 1',
     p1_dob: document.getElementById('p1_date').value,
     p1_tob: document.getElementById('p1_time').value,
+    p1_place: document.getElementById('p1_place').value,
     p1_lat: parseFloat(document.getElementById('p1_lat').value),
     p1_lon: parseFloat(document.getElementById('p1_lon').value),
     p1_tz:  parseFloat(document.getElementById('p1_tz').value),
+    
+    p2_name: document.getElementById('p2_name').value || 'Person 2',
     p2_dob: document.getElementById('p2_date').value,
     p2_tob: document.getElementById('p2_time').value,
+    p2_place: document.getElementById('p2_place').value,
     p2_lat: parseFloat(document.getElementById('p2_lat').value),
     p2_lon: parseFloat(document.getElementById('p2_lon').value),
     p2_tz:  parseFloat(document.getElementById('p2_tz').value),
+    method: selectedMethod
   };
 
   btn.disabled = true;
@@ -1336,11 +1342,23 @@ async function loadSavedHistory() {
           </div>
           <div class="hist-date">${(r.created||'').substring(0,16)}</div>
         </div>
-        <button class="hist-btn recall" onclick="recallToForm(${r.id})">🔄 Recall</button>
+        <div style="display: flex; gap: 5px; align-items: center;">
+          <button class="hist-btn recall" onclick="recallToForm(${r.id})">🔄 Recall</button>
+          <button class="hist-btn" style="background-color: #ffebee; color: #c62828; border: 1px solid #ef9a9a;" onclick="deleteHistoryRecord(${r.id})">❌</button>
+        </div>
       </div>`).join('');
   } catch(e) {
     el.innerHTML = '<p style="font-size:0.8rem;color:var(--bad)">Error loading history.</p>';
   }
+}
+
+function deleteHistoryRecord(recordId) {
+  try {
+    let history = JSON.parse(localStorage.getItem('kundaliHistory') || '[]');
+    history = history.filter(r => r.id !== recordId);
+    localStorage.setItem('kundaliHistory', JSON.stringify(history));
+    loadSavedHistory(); // refresh the list
+  } catch(e) { alert('Could not delete: ' + e.message); }
 }
 
 async function recallToForm(recordId) {

@@ -1,5 +1,5 @@
-const CACHE = 'kundali-milan-v3';
-const STATIC = ['/', '/index.html', '/compatibility_logic.js', '/manifest.json'];
+const CACHE = 'kundali-milan-v4';
+const STATIC = ['./', './index.html', './compatibility_logic.js', './manifest.json', './icon-192.png', './logo-small.png', './pdf_engine.js', './astro_calc.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)));

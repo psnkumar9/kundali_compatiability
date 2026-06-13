@@ -35,9 +35,89 @@ function generateKundaliPDF(data) {
   const p2_lat = parseFloat(document.getElementById('p2_lat').value).toFixed(4);
   const p2_lon = parseFloat(document.getElementById('p2_lon').value).toFixed(4);
   const p2_tz = document.getElementById('p2_tz').value;
+  function cleanStr(str) { return str ? str.replace(/[^\x00-\x7F]/g, '').trim() : ''; }
+  const p1_place = cleanStr(document.getElementById('p1_place').value);
+  const p2_place = cleanStr(document.getElementById('p2_place').value);
 
   const m1 = p1.manglik || {};
   const m2 = p2.manglik || {};
+  
+  function buildSouthIndianChart(chartData, title) {
+    if (!chartData) return {};
+    const fmt = (idx) => chartData[idx].map(p => p.substring(0, 2)).join(', ');
+    return {
+      table: {
+        widths: ['25%', '25%', '25%', '25%'],
+        heights: [40, 40, 40, 40],
+        body: [
+          [
+            { text: [{text:'Pi\n', fontSize:8, color:'#888'}, {text:fmt(11), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: [{text:'Ar\n', fontSize:8, color:'#888'}, {text:fmt(0), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: [{text:'Ta\n', fontSize:8, color:'#888'}, {text:fmt(1), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: [{text:'Ge\n', fontSize:8, color:'#888'}, {text:fmt(2), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] }
+          ],
+          [
+            { text: [{text:'Aq\n', fontSize:8, color:'#888'}, {text:fmt(10), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: title, colSpan: 2, rowSpan: 2, alignment: 'center', margin: [0, 30, 0, 0], bold: true, fontSize: 11, color: '#4a0072' },
+            '',
+            { text: [{text:'Ca\n', fontSize:8, color:'#888'}, {text:fmt(3), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] }
+          ],
+          [
+            { text: [{text:'Ca\n', fontSize:8, color:'#888'}, {text:fmt(9), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] },
+            '',
+            '',
+            { text: [{text:'Le\n', fontSize:8, color:'#888'}, {text:fmt(4), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] }
+          ],
+          [
+            { text: [{text:'Sa\n', fontSize:8, color:'#888'}, {text:fmt(8), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: [{text:'Sc\n', fontSize:8, color:'#888'}, {text:fmt(7), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: [{text:'Li\n', fontSize:8, color:'#888'}, {text:fmt(6), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] },
+            { text: [{text:'Vi\n', fontSize:8, color:'#888'}, {text:fmt(5), bold:true}], alignment: 'center', margin: [0, 5, 0, 0] }
+          ]
+        ]
+      },
+      layout: {
+        hLineWidth: function (i) { return 1; },
+        vLineWidth: function (i) { return 1; },
+        hLineColor: function (i) { return '#aaa'; },
+        vLineColor: function (i) { return '#aaa'; }
+      },
+      margin: [0, 5, 0, 5]
+    };
+  }
+
+  let chartsSection = [];
+  if (p1.astro && p2.astro) {
+    chartsSection = [
+      { text: 'Astrological Charts & Current Dasha', style: 'sectionHeader', margin: [0, 15, 0, 10], pageBreak: 'before' },
+      {
+        columns: [
+          {
+            width: '48%',
+            stack: [
+              { text: `Boy (${p1.name})`, style: 'personName', alignment: 'center', color: '#4a0072' },
+              { text: `Vimshottari Dasha: ${p1.astro.dasha}`, fontSize: 10, alignment: 'center', color: '#666', margin: [0, 5, 0, 10] },
+              buildSouthIndianChart(p1.astro.d1, 'D1 (Rasi)'),
+              { text: '', margin: [0, 10, 0, 0] },
+              buildSouthIndianChart(p1.astro.d9, 'D9 (Navamsha)')
+            ]
+          },
+          { width: '4%', text: '' },
+          {
+            width: '48%',
+            stack: [
+              { text: `Girl (${p2.name})`, style: 'personName', alignment: 'center', color: '#ff6f00' },
+              { text: `Vimshottari Dasha: ${p2.astro.dasha}`, fontSize: 10, alignment: 'center', color: '#666', margin: [0, 5, 0, 10] },
+              buildSouthIndianChart(p2.astro.d1, 'D1 (Rasi)'),
+              { text: '', margin: [0, 10, 0, 0] },
+              buildSouthIndianChart(p2.astro.d9, 'D9 (Navamsha)')
+            ]
+          }
+        ]
+      },
+      { text: '', margin: [0, 20, 0, 0], pageBreak: 'after' }
+    ];
+  }
   const m1_str = (m1.is_manglik && !m1.exception_applies) ? 'Manglik' : (m1.is_manglik ? 'Manglik (Exception)' : 'Not Manglik');
   const m2_str = (m2.is_manglik && !m2.exception_applies) ? 'Manglik' : (m2.is_manglik ? 'Manglik (Exception)' : 'Not Manglik');
 
@@ -137,6 +217,7 @@ function generateKundaliPDF(data) {
                   { text: `Boy: ${p1.name || 'Unknown'}\n`, style: 'personName', color: '#4a0072' },
                   { text: `Date of Birth: ${p1_dob}\n`, style: 'detailLine' },
                   { text: `Time of Birth: ${p1_tob}\n`, style: 'detailLine' },
+                  { text: `Place of Birth: ${p1_place}\n`, style: 'detailLine' },
                   { text: `Coordinates: ${p1_lat}°N, ${p1_lon}°E (TZ: ${p1_tz})\n`, style: 'detailLine', color: '#666' },
                   { text: `Nakshatra: ${p1.nakshatra} (Pada ${p1.pada || '?'})\n`, style: 'detailLine' },
                   { text: `Rashi: ${p1.rashi}\n`, style: 'detailLine' },
@@ -150,6 +231,7 @@ function generateKundaliPDF(data) {
                   { text: `Girl: ${p2.name || 'Unknown'}\n`, style: 'personName', color: '#ff6f00' },
                   { text: `Date of Birth: ${p2_dob}\n`, style: 'detailLine' },
                   { text: `Time of Birth: ${p2_tob}\n`, style: 'detailLine' },
+                  { text: `Place of Birth: ${p2_place}\n`, style: 'detailLine' },
                   { text: `Coordinates: ${p2_lat}°N, ${p2_lon}°E (TZ: ${p2_tz})\n`, style: 'detailLine', color: '#666' },
                   { text: `Nakshatra: ${p2.nakshatra} (Pada ${p2.pada || '?'})\n`, style: 'detailLine' },
                   { text: `Rashi: ${p2.rashi}\n`, style: 'detailLine' },
@@ -163,6 +245,7 @@ function generateKundaliPDF(data) {
         },
         margin: [0, 0, 0, 20]
       },
+      ...chartsSection,
       { text: 'Score Summary', style: 'sectionHeader' },
       {
         text: `${isSouth ? data.poruthams_passed : data.total_score} / ${isSouth ? 10 : 36}`,
@@ -188,11 +271,19 @@ function generateKundaliPDF(data) {
         margin: [0, 0, 0, 5]
       },
       {
-        text: isSouth ? 'South India — Dashakoot (max 10)' : 'North India — Ashtakoota (max 36 Gunas)',
+        text: isSouth ? 'South India - Dashakoot (max 10)' : 'North India - Ashtakoota (max 36 Gunas)',
         fontSize: 10,
         color: '#757575',
         alignment: 'center',
-        margin: [0, 0, 0, 20]
+        margin: [0, 0, 0, 5]
+      },
+      {
+        text: "* Note: Tara/Dina Kuta scoring is calculated bi-directionally in accordance with advanced interpretive practices (awarding up to 1.5 pts Girl-to-Boy and 1.5 pts Boy-to-Girl) rather than a single unidirectional 3-point check. This elective adaptation provides a more realistic measure of mutual affinity.\n* Note: Planetary calculations for Rahu and Ketu use the standard Mean Node astronomical model. This may cause slight (up to 1.5 degree) Navamsha (D9) border variances compared to software defaulting to True Node calculations.",
+        fontSize: 9,
+        color: '#d32f2f',
+        italics: true,
+        alignment: 'center',
+        margin: [40, 0, 40, 20]
       },
       { text: 'Detailed Workings', style: 'sectionHeader' },
       ...buildWorkings(data, isSouth),

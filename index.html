@@ -1348,8 +1348,8 @@ async function autoSave() {
       created: new Date().toISOString().replace('T', ' ').substring(0,19),
       p1_name: body.p1_name,
       p2_name: body.p2_name,
-      p1_nakshatra: body.result.p1.nakshatra,
-      p2_nakshatra: body.result.p2.nakshatra,
+      p1_nakshatra: body.result.person1.nakshatra,
+      p2_nakshatra: body.result.person2.nakshatra,
       method: body.method,
       score: body.result.poruthams_passed !== undefined ? `${body.result.poruthams_passed}/10` : `${body.result.total_score}/36`,
       label: body.result.label,
@@ -1360,8 +1360,8 @@ async function autoSave() {
     localStorage.setItem('kundaliHistory', JSON.stringify(history));
 
     const persons = JSON.parse(localStorage.getItem('kundaliPersons') || '[]');
-    const p1 = { id: Date.now() + 1, name: body.p1_name, dob: body.p1_dob, tob: body.p1_tob, lat: body.p1_lat, lon: body.p1_lon, tz: body.p1_tz, place: body.p1_place, nakshatra: body.result.p1.nakshatra, rashi: body.result.p1.rashi };
-    const p2 = { id: Date.now() + 2, name: body.p2_name, dob: body.p2_dob, tob: body.p2_tob, lat: body.p2_lat, lon: body.p2_lon, tz: body.p2_tz, place: body.p2_place, nakshatra: body.result.p2.nakshatra, rashi: body.result.p2.rashi };
+    const p1 = { id: Date.now() + 1, name: body.p1_name, dob: body.p1_dob, tob: body.p1_tob, lat: body.p1_lat, lon: body.p1_lon, tz: body.p1_tz, place: body.p1_place, nakshatra: body.result.person1.nakshatra, rashi: body.result.person1.rashi };
+    const p2 = { id: Date.now() + 2, name: body.p2_name, dob: body.p2_dob, tob: body.p2_tob, lat: body.p2_lat, lon: body.p2_lon, tz: body.p2_tz, place: body.p2_place, nakshatra: body.result.person2.nakshatra, rashi: body.result.person2.rashi };
     
     const p1idx = persons.findIndex(p => p.name === p1.name);
     if (p1idx >= 0) persons.splice(p1idx, 1);

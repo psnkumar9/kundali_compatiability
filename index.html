@@ -535,6 +535,8 @@ input[type="file"] {
   header h1 { font-size: 1.1rem; }
 }
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
+  <script src="astro_calc.js"></script>
   <script src="compatibility_logic.js"></script>
 </head>
 <body>
@@ -976,21 +978,27 @@ async function searchCity(prefix) {
   if (q.length < 2) { dropdown.classList.remove('open'); return; }
   citySearchTimer[prefix] = setTimeout(async () => {
     try {
-      const res = await fetch('/api/cities?q=' + encodeURIComponent(q));
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=5`);
       const cities = await res.json();
       renderCityDropdown(prefix, cities, dropdown);
     } catch(e) { dropdown.classList.remove('open'); }
-  }, 250);
+  }, 600);
 }
 
 function renderCityDropdown(prefix, cities, dropdown) {
   if (!cities.length) { dropdown.classList.remove('open'); return; }
-  dropdown.innerHTML = cities.map(c => `
-    <div class="city-option" onclick='selectCity("${prefix}", ${JSON.stringify(c)})'>
-      <div class="city-name">${c.city || c.name || ''}</div>
-      <div class="city-sub">${c.country || ''} · ${Number(c.lat||0).toFixed(2)}°N ${Number(c.lng||c.lon||0).toFixed(2)}°E · UTC${formatTZ(c.timezone)}</div>
-    </div>
-  `).join('');
+  dropdown.innerHTML = cities.map(c => {
+    const name = c.display_name || c.city || c.name || '';
+    const lat = c.lat || 0;
+    const lon = c.lon || c.lng || 0;
+    const tz = c.timezone || 5.5; // fallback
+    const obj = { name: name, lat: lat, lon: lon, timezone: tz };
+    const safeObj = JSON.stringify(obj).replace(/'/g, "&#39;");
+    return `<div class="city-option" onclick='selectCity("${prefix}", ${safeObj})'>
+      <div class="city-name">${name}</div>
+      <div class="city-sub">${Number(lat).toFixed(2)}°N ${Number(lon).toFixed(2)}°E</div>
+    </div>`;
+  }).join('');
   dropdown.classList.add('open');
 }
 
@@ -1045,9 +1053,11 @@ async function searchHistory(prefix) {
 
 function renderHistoryDropdown(prefix, persons, dropdown) {
   if (!persons.length) { dropdown.classList.remove('open'); return; }
-  dropdown.innerHTML = persons.map(p => {
-    const safe = JSON.stringify(p).replace(/'/g,"&#39;");
-    return `<div class="history-option" onclick='loadFromHistory("${prefix}",${safe})'>
+  
+  window[`_history_${prefix}`] = persons;
+  
+  dropdown.innerHTML = persons.map((p, i) => {
+    return `<div class="history-option" onclick="loadFromHistory('${prefix}', ${i})">
       <div class="h-name">${escHtml(p.name)}</div>
       <div class="h-sub">${escHtml(p.nakshatra||'')} · ${escHtml(p.rashi||'')} · ${p.dob||''} · ${escHtml(p.place||'')}</div>
     </div>`;
@@ -1055,7 +1065,8 @@ function renderHistoryDropdown(prefix, persons, dropdown) {
   dropdown.classList.add('open');
 }
 
-function loadFromHistory(prefix, p) {
+function loadFromHistory(prefix, index) {
+  const p = window[`_history_${prefix}`][index];
   document.getElementById(prefix + '_name').value = p.name || '';
   if (p.dob) document.getElementById(prefix + '_date').value = p.dob;
   if (p.tob) document.getElementById(prefix + '_time').value = p.tob.substring(0, 5);
@@ -1154,12 +1165,80 @@ async function calculate() {
 
     const [p1, p2] = await Promise.all([fetchPerson('p1'), fetchPerson('p2')]);
     
+    // Calculate precise astrological charts locally FIRST
+    const p1d_str = document.getElementById('p1_date').value;
+    const p1t_str = document.getElementById('p1_time').value;
+    const p1_tz_val = parseFloat(document.getElementById('p1_tz').value);
+    const p2d_str = document.getElementById('p2_date').value;
+    const p2t_str = document.getElementById('p2_time').value;
+    const p2_tz_val = parseFloat(document.getElementById('p2_tz').value);
+    
+    let p1_astro = null;
+    let p2_astro = null;
+    
+    function getSignFromName(name) {
+        const signs = ['Mesha', 'Vrishabha', 'Mithuna', 'Karkataka', 'Simha', 'Kanya', 'Tula', 'Vrischika', 'Dhanus', 'Makara', 'Kumbha', 'Meena'];
+        return signs.indexOf(name);
+    }
+    
+    function enhanceAstroData(astroData, apiPerson) {
+        if (!astroData || !apiPerson.api) return;
+        
+        // Use exact local moon to find Nakshatra, Pada and Rasi to fix external API timezone/sunrise bugs
+        if (astroData.planets && astroData.planets['Moon'] !== undefined) {
+            const moonLon = astroData.planets['Moon'];
+            const nakLen = 13 + 1/3;
+            const nakIdx = Math.floor(moonLon / nakLen);
+            astroData.nakshatra_number = nakIdx + 1;
+            const nNames = ["Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra", "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha", "Moola", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishtha", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"];
+            astroData.nakshatra_name = nNames[nakIdx];
+            astroData.pada = Math.floor((moonLon % nakLen) / (3 + 1/3)) + 1;
+            const rasiIdx = Math.floor(moonLon / 30.0);
+            astroData.rashi_number = rasiIdx + 1;
+            const signs = ['Mesha', 'Vrishabha', 'Mithuna', 'Karkataka', 'Simha', 'Kanya', 'Tula', 'Vrischika', 'Dhanus', 'Makara', 'Kumbha', 'Meena'];
+            astroData.rashi_name = signs[rasiIdx];
+        }
+        
+        // Inject Lagna
+        let ascSignIdx = null;
+        if (apiPerson.api.lagna && apiPerson.api.lagna.name) {
+            ascSignIdx = getSignFromName(apiPerson.api.lagna.name);
+            if (ascSignIdx !== -1) {
+                astroData.d1[ascSignIdx].push('As');
+                astroData.lagna_idx = ascSignIdx;
+                
+                // Navamsha Lagna
+                const lagnaDeg = apiPerson.api.lagna.degrees + ascSignIdx * 30.0;
+                const d9_asc = Math.floor((lagnaDeg % 30.0) / (3 + 1/3));
+                const fireOffsets = [0, 9, 6, 3];
+                const d9_asc_idx = (fireOffsets[ascSignIdx % 4] + d9_asc) % 12;
+                astroData.d9[d9_asc_idx].push('As');
+            }
+        }
+        
+        // Calculate Kuja Dosha (Manglik)
+        if (ascSignIdx !== null && ascSignIdx !== -1 && astroData.planets && astroData.planets['Mars'] !== undefined) {
+            const marsSign = Math.floor(astroData.planets['Mars'] / 30.0) % 12;
+            const house = (marsSign - ascSignIdx + 12) % 12 + 1;
+            astroData.is_manglik = [1, 2, 4, 7, 8, 12].includes(house);
+        }
+    }
+
+    if (window.processAstroData) {
+        p1_astro = window.processAstroData(p1d_str, p1t_str, p1_tz_val);
+        p2_astro = window.processAstroData(p2d_str, p2t_str, p2_tz_val);
+        enhanceAstroData(p1_astro, p1);
+        enhanceAstroData(p2_astro, p2);
+    }
+    
+    // Override API values with exact local values for compatibility engine
+    const p1_nak = p1_astro ? p1_astro.nakshatra_number : p1.api.nakshatra.number;
+    const p2_nak = p2_astro ? p2_astro.nakshatra_number : p2.api.nakshatra.number;
+    const p1_rashi = p1_astro ? p1_astro.rashi_number : p1.api.rasi.number;
+    const p2_rashi = p2_astro ? p2_astro.rashi_number : p2.api.rasi.number;
+
     // Process local engine
     const isSouth = (selectedMethod === 'South');
-    const p1_nak = p1.api.nakshatra.number;
-    const p2_nak = p2.api.nakshatra.number;
-    const p1_rashi = p1.api.rasi.number;
-    const p2_rashi = p2.api.rasi.number;
 
     let totalScore = 0;
     let percent = 0;
@@ -1196,34 +1275,40 @@ async function calculate() {
         else if(totalScore >= 18) { label = "Average"; description = "Proceed with remedies"; }
         else { label = "Incompatible"; description = "Not recommended"; }
     }
+    
+    function cleanStr(str) {
+        return str ? str.replace(/[^\x00-\x7F]/g, '').trim() : '';
+    }
 
     const data = {
         method: selectedMethod,
         score_percent: percent,
         total_score: totalScore,
         poruthams_passed: pPassed,
-        label: label,
-        description: description,
+        label: cleanStr(label),
+        description: cleanStr(description),
         person1: {
-            name: p1.name,
-            nakshatra: p1.api.nakshatra.name,
-            pada: '?',
+            name: cleanStr(p1.name),
+            nakshatra: p1_astro ? p1_astro.nakshatra_name : cleanStr(p1.api.nakshatra.name),
+            pada: p1_astro && p1_astro.pada ? p1_astro.pada : '?',
             nakshatra_number: p1_nak,
-            rashi: p1.api.rasi.name,
-            manglik: null
+            rashi: p1_astro ? p1_astro.rashi_name : cleanStr(p1.api.rasi.name),
+            manglik: p1_astro && p1_astro.is_manglik !== undefined ? { is_manglik: p1_astro.is_manglik, exception_applies: false } : null,
+            astro: p1_astro
         },
         person2: {
-            name: p2.name,
-            nakshatra: p2.api.nakshatra.name,
-            pada: '?',
+            name: cleanStr(p2.name),
+            nakshatra: p2_astro ? p2_astro.nakshatra_name : cleanStr(p2.api.nakshatra.name),
+            pada: p2_astro && p2_astro.pada ? p2_astro.pada : '?',
             nakshatra_number: p2_nak,
-            rashi: p2.api.rasi.name,
-            manglik: null
+            rashi: p2_astro ? p2_astro.rashi_name : cleanStr(p2.api.rasi.name),
+            manglik: p2_astro && p2_astro.is_manglik !== undefined ? { is_manglik: p2_astro.is_manglik, exception_applies: false } : null,
+            astro: p2_astro
         },
-        koots: kootsArray,
-        poruthams: poruthamsArray,
+        koots: kootsArray.map(k => ({...k, name: cleanStr(k.name), scripture: cleanStr(k.scripture)})),
+        poruthams: poruthamsArray.map(p => ({...p, name: cleanStr(p.name)})),
         extra_checks: [],
-        manglik_cancelled: false,
+        manglik_cancelled: (p1_astro && p1_astro.is_manglik && p2_astro && p2_astro.is_manglik) || false,
         scriptural_notes: []
     };
 
